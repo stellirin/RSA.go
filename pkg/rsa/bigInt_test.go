@@ -31,14 +31,13 @@ func TestBiCopy(t *testing.T) {
 // func TestBiToHex(t *testing.T) {}
 
 func TestBiFromHex(t *testing.T) {
-	var expected, result bigInt
 	SetMaxDigits(8)
 
-	expected = bigInt{
+	expected := bigInt{
 		digits: []int{48879, 57005, 0, 0, 0, 0, 0, 0}, // beef, dead
 		isNeg:  false,
 	}
-	result = biFromHex("deadbeef")
+	result := biFromHex("deadbeef")
 	for i, e := range expected.digits {
 		if e != result.digits[i] {
 			t.Errorf("biFromHex(\"deadbeef\") failed, expected %v, got %v", expected.digits, result.digits)
@@ -51,14 +50,13 @@ func TestBiFromHex(t *testing.T) {
 }
 
 func TestBiFromHexNeg(t *testing.T) {
-	var expected, result bigInt
 	SetMaxDigits(8)
 
-	expected = bigInt{
+	expected := bigInt{
 		digits: []int{48879, 57005, 0, 0, 0, 0, 0, 0}, // beef, dead
 		isNeg:  true,
 	}
-	result = biFromHex("-deadbeef")
+	result := biFromHex("-deadbeef")
 	for i, e := range expected.digits {
 		if e != result.digits[i] {
 			t.Errorf("biFromHex(\"-deadbeef\") failed, expected %v, got %v", expected.digits, result.digits)
