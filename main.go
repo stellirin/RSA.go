@@ -2,9 +2,26 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 
 	"github.com/stellirin/RSA.go/pkg/rsa"
 )
+
+// PrintMemUsage outputs the current, total and OS memory being used. As well as the number
+// of garage collection cycles completed.
+func PrintMemUsage() {
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
+	fmt.Printf("Alloc = %v KiB", bToKb(m.Alloc))
+	fmt.Printf("\tTotalAlloc = %v KiB", bToKb(m.TotalAlloc))
+	fmt.Printf("\tSys = %v KiB", bToKb(m.Sys))
+	fmt.Printf("\tNumGC = %v\n", m.NumGC)
+}
+
+func bToKb(b uint64) uint64 {
+	return b / 1024
+}
 
 func main() {
 	rsa.SetMaxDigits(262)
@@ -15,9 +32,17 @@ func main() {
 		0,
 	)
 
-	expected := "1afa376394f638f4a2828c31abadf05ba84b8a7698a1f8c7374c172912df10f4b821dfca1d9830f53e87d8311b4af6f8a07c3e46721eb1517f100ce8f7fac62e6a2d32a210929efb01275884ef5a2284f269eeb9380c15bcdfc52a49ea04429849059166394ee1f220d8e92a64583646d0499fcd0b345e474c1f4d6074d4bcb8"
-	result := rsa.EncryptedString(key, "password", 0, 0)
+	e := "1afa376394f638f4a2828c31abadf05ba84b8a7698a1f8c7374c172912df10f4b821dfca1d9830f53e87d8311b4af6f8a07c3e46721eb1517f100ce8f7fac62e6a2d32a210929efb01275884ef5a2284f269eeb9380c15bcdfc52a49ea04429849059166394ee1f220d8e92a64583646d0499fcd0b345e474c1f4d6074d4bcb8"
+	r := rsa.EncryptedString(key, "password", 0, 0)
 
-	fmt.Println(expected)
-	fmt.Println(result)
+	fmt.Println(e)
+	fmt.Println(r)
+
+	s := "abcdefghijklmnopqrstuvwxyz"
+	ss := make([]string, 26, 26)
+
+	for i := range s {
+		ss[i] = rsa.EncryptedString(key, string(i), 0, 0)
+		PrintMemUsage()
+	}
 }
