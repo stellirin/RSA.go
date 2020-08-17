@@ -1,14 +1,14 @@
 package rsa
 
-// BarrettMu is a struct.
-type BarrettMu struct {
-	modulus BigInt
+// barrettMu is a struct.
+type barrettMu struct {
+	modulus bigInt
 	k       int
-	mu      BigInt
-	bkplus1 BigInt
+	mu      bigInt
+	bkplus1 bigInt
 }
 
-func (b *BarrettMu) modulo(x BigInt) BigInt {
+func (b *barrettMu) modulo(x bigInt) bigInt {
 	q1 := biDivideByRadixPower(x, b.k-1)
 	q2 := biMultiply(q1, b.mu)
 	q3 := biDivideByRadixPower(q2, b.k+1)
@@ -27,13 +27,13 @@ func (b *BarrettMu) modulo(x BigInt) BigInt {
 	return r
 }
 
-func (b *BarrettMu) multiplyMod(x BigInt, y BigInt) BigInt {
+func (b *barrettMu) multiplyMod(x bigInt, y bigInt) bigInt {
 	xy := biMultiply(x, y)
 	return b.modulo(xy)
 }
 
-func (b *BarrettMu) powMod(x BigInt, y BigInt) BigInt {
-	result := NewBigInt(false)
+func (b *barrettMu) powMod(x bigInt, y bigInt) bigInt {
+	result := newBigInt(false)
 	result.digits[0] = 1
 	a := x
 	k := y
@@ -50,16 +50,16 @@ func (b *BarrettMu) powMod(x BigInt, y BigInt) BigInt {
 	return result
 }
 
-func newBarretMu(m BigInt) BarrettMu {
+func newBarretMu(m bigInt) barrettMu {
 	modulus := biCopy(m)
 	k := biHighIndex(modulus) + 1
-	b2k := NewBigInt(false)
+	b2k := newBigInt(false)
 	b2k.digits[2*k] = 1 // b2k = b^(2k)
 	mu := biDivide(b2k, modulus)
-	bkplus1 := NewBigInt(false)
+	bkplus1 := newBigInt(false)
 	bkplus1.digits[k+1] = 1
 
-	b := BarrettMu{
+	b := barrettMu{
 		modulus: modulus,
 		k:       k,
 		mu:      mu,

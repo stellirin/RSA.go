@@ -9,46 +9,52 @@ var RSAAPP = map[string]int{
 	"NumericEncoding": 2,
 }
 
-// RSAKeyPair is invoked as the first step in the encryption or decryption
+// KeyPair is invoked as the first step in the encryption or decryption
 // process to take the three numbers (expressed as hexadecimal strings) that
 // are used for RSA asymmetric encryption/decryption and turn them into a key
 // object that can be used for encrypting and decrypting.
-type RSAKeyPair struct {
+type KeyPair struct {
 	encryptionExponent string
 	decryptionExponent string
 	modulus            string
 	keylen             int
 }
 
-func (key *RSAKeyPair) E() BigInt {
+// E returns the encryptionExponent in bigInt format.
+func (key *KeyPair) E() bigInt {
 	return biFromHex(key.encryptionExponent)
 }
 
-func (key *RSAKeyPair) D() BigInt {
+// D returns the decryptionExponent in bigInt format.
+func (key *KeyPair) D() bigInt {
 	return biFromHex(key.decryptionExponent)
 }
 
-func (key *RSAKeyPair) M() BigInt {
+// M returns the modulis in bigInt format.
+func (key *KeyPair) M() bigInt {
 	return biFromHex(key.modulus)
 }
 
-func (key *RSAKeyPair) ChunkSize() int {
+// ChunkSize returns the current chunk size.
+func (key *KeyPair) ChunkSize() int {
 	// i := key.keylen / 8
 	return 2 * biHighIndex(key.M())
 }
 
-func (key *RSAKeyPair) Radix() int {
-	return 16
+// Radix returns biRadixBits.
+func (key *KeyPair) Radix() int {
+	return biRadixBits
 }
 
-func (key *RSAKeyPair) Barrett() BarrettMu {
+// Barrett returns a new barretMu.
+func (key *KeyPair) Barrett() barrettMu {
 	return newBarretMu(key.M())
 }
 
-// NewRSAKeyPair initializes a new RSAKeyPair.
-func NewRSAKeyPair(encryptionExponent string, decryptionExponent string, modulus string, keylen int) RSAKeyPair {
-	var key RSAKeyPair
-	key = RSAKeyPair{
+// NewKeyPair initializes a new RSAKeyPair.
+func NewKeyPair(encryptionExponent string, decryptionExponent string, modulus string, keylen int) KeyPair {
+	var key KeyPair
+	key = KeyPair{
 		encryptionExponent: encryptionExponent,
 		decryptionExponent: decryptionExponent,
 		modulus:            modulus,
@@ -59,12 +65,12 @@ func NewRSAKeyPair(encryptionExponent string, decryptionExponent string, modulus
 
 /*****************************************************************************/
 
-// encryptedString accepts a plaintext string that is to be encrypted with the
+// EncryptedString accepts a plaintext string that is to be encrypted with the
 // public key component of the previously-built RSA key using the RSA
 // assymmetric encryption method.  Before it is encrypted, the plaintext
 // string is padded to the same length as the encryption key for proper
 // encryption.
-func EncryptedString(key RSAKeyPair, s string, pad int, encoding int) string {
+func EncryptedString(key KeyPair, s string, pad int, encoding int) string {
 	var result string                                  // Cypthertext result
 	var i, j, k int                                    // The usual Fortran index stuff
 	sl := len(s)                                       // Plaintext string length
@@ -156,7 +162,7 @@ func EncryptedString(key RSAKeyPair, s string, pad int, encoding int) string {
 
 	for i = 0; i < al; i += key.ChunkSize() {
 		// Get a block.
-		block := NewBigInt(false)
+		block := newBigInt(false)
 
 		j = 0
 

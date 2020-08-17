@@ -31,10 +31,10 @@ func TestBiCopy(t *testing.T) {
 // func TestBiToHex(t *testing.T) {}
 
 func TestBiFromHex(t *testing.T) {
-	var expected, result BigInt
+	var expected, result bigInt
 	SetMaxDigits(8)
 
-	expected = BigInt{
+	expected = bigInt{
 		digits: []int{48879, 57005, 0, 0, 0, 0, 0, 0}, // beef, dead
 		isNeg:  false,
 	}
@@ -51,10 +51,10 @@ func TestBiFromHex(t *testing.T) {
 }
 
 func TestBiFromHexNeg(t *testing.T) {
-	var expected, result BigInt
+	var expected, result bigInt
 	SetMaxDigits(8)
 
-	expected = BigInt{
+	expected = bigInt{
 		digits: []int{48879, 57005, 0, 0, 0, 0, 0, 0}, // beef, dead
 		isNeg:  true,
 	}

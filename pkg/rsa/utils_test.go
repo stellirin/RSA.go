@@ -7,7 +7,7 @@ import (
 func TestNewBigInt(t *testing.T) {
 	SetMaxDigits(8)
 	expected := []int{0, 0, 0, 0, 0, 0, 0, 0}
-	result := NewBigInt(false)
+	result := newBigInt(false)
 
 	if len(expected) != len(result.digits) {
 		t.Errorf("NewBigInt(false) failed, expected %v, got %v", len(expected), len(result.digits))

@@ -4,25 +4,25 @@ import (
 	"fmt"
 )
 
-// BigInt represents a big integer as an array of small integers.
-type BigInt struct {
+// bigInt represents a big integer as an array of small integers.
+type bigInt struct {
 	digits []int
 	isNeg  bool
 }
 
 var maxDigits int
-var ZERO_ARRAY []int
-var bigZero, bigOne BigInt
+var zeroArray []int
+var bigZero, bigOne bigInt
 
-// NewBigInt initializes a new BigInt.
-func NewBigInt(flag bool) BigInt {
-	bi := BigInt{}
+// newBigInt initializes a new BigInt.
+func newBigInt(flag bool) bigInt {
+	bi := bigInt{}
 	if flag {
 		bi.digits = []int{}
 	} else {
-		// JS manually populates and copies ZERO_ARRAY,
-		// but we can simply make a new slice using the length of ZERO_ARRAY
-		bi.digits = make([]int, len(ZERO_ARRAY))
+		// JS manually populates and copies zeroArray,
+		// but we can simply make a new slice using the length of zeroArray
+		bi.digits = make([]int, len(zeroArray), len(zeroArray))
 	}
 	bi.isNeg = false
 	return bi
@@ -31,9 +31,9 @@ func NewBigInt(flag bool) BigInt {
 // SetMaxDigits initializes the RSA library.
 func SetMaxDigits(value int) {
 	maxDigits = value
-	ZERO_ARRAY = make([]int, value, value)
-	bigZero = NewBigInt(false)
-	bigOne = NewBigInt(false)
+	zeroArray = make([]int, value, value)
+	bigZero = newBigInt(false)
+	bigOne = newBigInt(false)
 	bigOne.digits[0] = 1
 }
 

@@ -8,7 +8,7 @@ import (
 
 func main() {
 	rsa.SetMaxDigits(262)
-	key := rsa.NewRSAKeyPair(
+	key := rsa.NewKeyPair(
 		"10001",
 		"0",
 		"b1ae618873ee7ff972e9be6dba93f24f0ef38ac50c2265f7274696b37e6159d2c81a798552360e941be4f9e22522b5421bf753f1ab22626ddee300ee675553e57ad5ab86f77a75c28babdb3e263aad1245e4a2cf58789406083d56d3a4bd6d04e17a77f1919a2b9e1176a0b21931bc82a132ef0af661076d92cef6b13313886f",
