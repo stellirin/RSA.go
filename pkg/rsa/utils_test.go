@@ -74,7 +74,7 @@ func TestArrayCopy(t *testing.T) {
 	for i, e := range expected {
 		if e != result[i] {
 			t.Errorf("hexToDigit(\"deadbeef\") failed, expected %v, got %v", expected, result)
-			// break
+			break
 		}
 	}
 }
