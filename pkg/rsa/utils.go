@@ -1,9 +1,5 @@
 package rsa
 
-import (
-	"fmt"
-)
-
 // bigInt represents a big integer as an array of small integers.
 type bigInt struct {
 	digits []int
@@ -30,17 +26,19 @@ func newBigInt(flag bool) *bigInt {
 
 // SetMaxDigits initializes the RSA library.
 func SetMaxDigits(value int) {
-	maxDigits = value
-	zeroArray = make([]int, value, value)
-	bigZero = *newBigInt(false)
-	bigOne = *newBigInt(false)
-	bigOne.digits[0] = 1
+	if maxDigits != value {
+		maxDigits = value
+		zeroArray = make([]int, value, value)
+		bigZero = *newBigInt(false)
+		bigOne = *newBigInt(false)
+		bigOne.digits[0] = 1
+	}
 }
 
 func reverseStr(s string) string {
 	result := ""
 	for i := len(s) - 1; i > -1; i-- {
-		result = fmt.Sprint(result, string(s[i]))
+		result += string(s[i])
 	}
 	return result
 }
@@ -103,10 +101,11 @@ func hexToDigit(s string) int {
 }
 
 func digitToBytes(n int) string {
-	c1 := string(n & 0xFF)
+	// NOTE: This returns invalid UTF-8 character values.
+	c1 := string(rune(n & 0xFF))
 	n >>= 8
-	c2 := string(n & 0xFF)
-	return fmt.Sprint(c2, c1)
+	c2 := string(rune(n & 0xFF))
+	return c2 + c1
 }
 
 func arrayCopy(src []int, srcStart int, dest []int, destStart int, n int) {

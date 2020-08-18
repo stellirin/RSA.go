@@ -1,7 +1,5 @@
 package rsa
 
-import "fmt"
-
 var biRadixBits = 16
 var bitsPerDigit = biRadixBits
 var biRadix = 1 << 16 // = 2^16 = 65536
@@ -67,7 +65,7 @@ func biFromHex(s string) *bigInt {
 func biToBytes(x *bigInt) string {
 	var result string
 	for i := biHighIndex(x); i > -1; i-- {
-		result = fmt.Sprint(result, digitToBytes(x.digits[i]))
+		result += digitToBytes(x.digits[i])
 	}
 	return result
 }

@@ -24,7 +24,7 @@ func bToKb(b uint64) uint64 {
 }
 
 func main() {
-	rsa.SetMaxDigits(262)
+	rsa.SetMaxDigits(256)
 	key := rsa.NewKeyPair(
 		"10001",
 		"0",

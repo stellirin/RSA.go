@@ -1,313 +1,748 @@
 package rsa
 
 import (
+	"reflect"
 	"testing"
 )
 
-// func TestBiFromDecimal(t *testing.T) {}
+var testRunes = []rune{222, 173, 190, 239, 202, 254, 240, 13, 186, 190, 192, 222, 250, 206, 190, 173}
+var testString = "deadbeefcafef00dbabec0defacebead"
+var testBigInt = bigInt{
+	digits: []int{48813, 64206, 49374, 47806, 61453, 51966, 48879, 57005}, // bead, face, c0de, babe, f00d, cafe, beef, dead
+	isNeg:  false,
+}
 
-func TestBiCopy(t *testing.T) {
-	SetMaxDigits(8)
-	expected := biFromHex("deadbeef")
-	result := biCopy(expected)
+// func Test_biFromDecimal(t *testing.T) {}
 
-	for i, e := range expected.digits {
-		if e != result.digits[i] {
-			t.Errorf("biFromHex(\"deadbeef\") failed, expected %v, got %v", expected.digits, result.digits)
-			break
-		}
+func Test_biCopy(t *testing.T) {
+	type args struct {
+		bi *bigInt
 	}
-	if expected.isNeg != result.isNeg {
-		t.Errorf("biFromHex(\"deadbeef\") failed, expected isNeg %v, got %v", expected.isNeg, result.isNeg)
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
+	SetMaxDigits(8)
+
+	tests := []test{
+		{
+			args: args{
+				bi: &testBigInt,
+			},
+			want: &testBigInt,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biCopy(tt.args.bi); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biCopy() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-// func TestBiFromNumber(t *testing.T) {}
+// func Test_biFromNumber(t *testing.T) {}
 
-// func TestBiToString(t *testing.T) {}
-
-// func TestBiToDecimal(t *testing.T) {}
-
-// func TestBiToHex(t *testing.T) {}
-
-func TestBiFromHex(t *testing.T) {
+func Test_biToString(t *testing.T) {
+	type args struct {
+		x     *bigInt
+		radix int
+	}
+	type test struct {
+		name string
+		args args
+		want string
+	}
 	SetMaxDigits(8)
 
-	expected := bigInt{
-		digits: []int{48879, 57005, 0, 0, 0, 0, 0, 0}, // beef, dead
-		isNeg:  false,
+	tests := []test{
+		// TODO: Add test cases.
 	}
-	result := biFromHex("deadbeef")
-	for i, e := range expected.digits {
-		if e != result.digits[i] {
-			t.Errorf("biFromHex(\"deadbeef\") failed, expected %v, got %v", expected.digits, result.digits)
-			break
-		}
-	}
-	if expected.isNeg != result.isNeg {
-		t.Errorf("biFromHex(\"deadbeef\") failed, expected isNeg %v, got %v", expected.isNeg, result.isNeg)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biToString(tt.args.x, tt.args.radix); got != tt.want {
+				t.Errorf("biToString() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiFromHexNeg(t *testing.T) {
+// func Test_biToDecimal(t *testing.T) {}
+
+func Test_biToHex(t *testing.T) {
+	type args struct {
+		x *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want string
+	}
 	SetMaxDigits(8)
 
-	expected := bigInt{
-		digits: []int{48879, 57005, 0, 0, 0, 0, 0, 0}, // beef, dead
-		isNeg:  true,
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+			},
+			want: testString,
+		},
 	}
-	result := biFromHex("-deadbeef")
-	for i, e := range expected.digits {
-		if e != result.digits[i] {
-			t.Errorf("biFromHex(\"-deadbeef\") failed, expected %v, got %v", expected.digits, result.digits)
-			// break
-		}
-	}
-	if expected.isNeg != result.isNeg {
-		t.Errorf("biFromHex(\"-deadbeef\") failed, expected isNeg %v, got %v", expected.isNeg, result.isNeg)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biToHex(tt.args.x); got != tt.want {
+				t.Errorf("biToHex() = %q, want %q", got, tt.want)
+			}
+		})
 	}
 }
 
-// func TestBiFromString(t *testing.T) {}
-
-// func TestBiToBytes(t *testing.T) {}
-
-// func TestBiDump(t *testing.T) {}
-
-func TestBiAdd(t *testing.T) {
+func Test_biFromHex(t *testing.T) {
+	type args struct {
+		s string
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
 	SetMaxDigits(8)
-	bix := biFromHex("deadbeef")
-	biy := biFromHex("beefdead")
-	expected := []int{40348, 40349, 1, 0, 0, 0, 0, 0}
-	result := biAdd(bix, biy)
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biAdd(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			// break
-		}
+	tests := []test{
+		{
+			args: args{
+				s: testString,
+			},
+			want: &testBigInt,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biFromHex(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biFromHex() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiSubtract(t *testing.T) {
-	SetMaxDigits(8)
-	bix := biFromHex("deadbeef")
-	biy := biFromHex("beefdead")
-	expected := []int{57410, 8125, 0, 0, 0, 0, 0, 0}
-	result := biSubtract(bix, biy)
+// func Test_biFromString(t *testing.T) {}
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biSubtract(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			// break
-		}
+func Test_biToBytes(t *testing.T) {
+	type args struct {
+		x *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want string
+	}
+	SetMaxDigits(8)
+
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+			},
+			want: string(testRunes),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biToBytes(tt.args.x); got != tt.want {
+				t.Errorf("biToBytes() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiHighIndex(t *testing.T) {
-	SetMaxDigits(8)
-	bi := biFromHex("deadbeef")
-	expected := 1 // 0 index, every 4 chars
-	result := biHighIndex(bi)
+// func Test_biDump(t *testing.T) {}
 
-	if expected != result {
-		t.Errorf("biHighIndex(BigInt) failed, expected %v, got %v", expected, result)
+func Test_biAdd(t *testing.T) {
+	type args struct {
+		x *bigInt
+		y *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
+	SetMaxDigits(8)
+
+	tests := []test{
+		{
+			args: args{
+				x: biFromHex("deadbeef"),
+				y: biFromHex("beefdead"),
+			},
+			want: &bigInt{
+				digits: []int{40348, 40349, 1, 0, 0, 0, 0, 0},
+				isNeg:  false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biAdd(tt.args.x, tt.args.y); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biAdd() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiNumBits(t *testing.T) {
+func Test_biSubtract(t *testing.T) {
+	type args struct {
+		x *bigInt
+		y *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
 	SetMaxDigits(8)
-	bi := biFromHex("deadbeef")
-	expected := 32
-	result := biNumBits(bi)
 
-	if result != expected {
-		t.Errorf("biNumBits(\"deadbeef\") failed, expected %v, got %v", expected, result)
+	tests := []test{
+		{
+			args: args{
+				x: biFromHex(testString),
+				y: biFromHex(reverseStr(testString)),
+			},
+			want: &bigInt{
+				digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961},
+				isNeg:  false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biSubtract(tt.args.x, tt.args.y); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biSubtract() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiMultiply(t *testing.T) {
+func Test_biHighIndex(t *testing.T) {
+	type args struct {
+		x *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want int
+	}
 	SetMaxDigits(8)
-	bi := biFromHex("deadbeef")
-	expected := []int{41761, 8557, 52498, 49585} // a321 216d cd12 c1b1
-	result := biMultiply(bi, bi)
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biMultiply(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			break
-		}
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+			},
+			want: 7,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biHighIndex(tt.args.x); got != tt.want {
+				t.Errorf("biHighIndex() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiMultiplyDigit(t *testing.T) {
+func Test_biNumBits(t *testing.T) {
+	type args struct {
+		x *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want int
+	}
 	SetMaxDigits(8)
-	bi := biFromHex("deadbeef")
-	expected := []int{61168, 60123, 13, 0, 0, 0, 0, 0} //eef0, eadb, d
-	result := biMultiplyDigit(bi, 16)
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biMultiplyDigit(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			// break
-		}
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+			},
+			want: 128,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biNumBits(tt.args.x); got != tt.want {
+				t.Errorf("biNumBits() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiShiftLeft(t *testing.T) {
-	SetMaxDigits(8)
-	bi := biFromHex("deadbeef")
-	expected := []int{0, 48879, 57005, 0, 0, 0, 0} // 0000, beef, dead
-	result := biShiftLeft(bi, 16)
+func Test_biMultiply(t *testing.T) {
+	type args struct {
+		x *bigInt
+		y *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
+	SetMaxDigits(16)
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biShiftLeft(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			break
-		}
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+				y: &testBigInt,
+			},
+			want: &bigInt{
+				digits: []int{
+					16617, 20593, 42861, 32538, 45046, 25231, 13697, 47718,
+					1165, 9698, 10208, 22465, 22231, 33427, 52499, 49585,
+				},
+				isNeg: false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biMultiply(tt.args.x, tt.args.y); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biMultiply() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiShiftRight(t *testing.T) {
-	SetMaxDigits(8)
-	bi := biFromHex("deadbeef")
-	expected := []int{57005, 0, 0, 0, 0, 0, 0} // dead
-	result := biShiftRight(bi, 16)
+func Test_biMultiplyDigit(t *testing.T) {
+	type args struct {
+		x *bigInt
+		y int
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
+	SetMaxDigits(16)
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biShiftLeft(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			break
-		}
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+				y: 16,
+			},
+			want: &bigInt{
+				digits: []int{
+					60112, 44267, 3567, 44012, 219, 45039, 61180, 60123,
+					13, 0, 0, 0, 0, 0, 0, 0,
+				},
+				isNeg: false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biMultiplyDigit(tt.args.x, tt.args.y); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biMultiplyDigit() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-// func TestBiMultiplyByRadixPower(t *testing.T) {}
-
-func TestBiDivideByRadixPower(t *testing.T) {
+func Test_biShiftLeft(t *testing.T) {
+	type args struct {
+		x *bigInt
+		n int
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
 	SetMaxDigits(8)
-	bi := biFromHex("deadbeefcafef00dbeadfacebabe")
-	expected := []int{61453, 51966, 48879, 57005, 0, 0, 0, 0} // f00d, cafe, beef, dead
-	result := biDivideByRadixPower(bi, 3)
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biDivideByRadixPower(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			break
-		}
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+				n: 16,
+			},
+			want: &bigInt{
+				digits: []int{0, 48813, 64206, 49374, 47806, 61453, 51966, 48879},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biShiftLeft(tt.args.x, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biShiftLeft() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiModuloByRadixPower(t *testing.T) {
+func Test_biShiftRight(t *testing.T) {
+	type args struct {
+		x *bigInt
+		n int
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
 	SetMaxDigits(8)
-	bi := biFromHex("deadbeefcafef00dbeadfacebabe")
-	expected := []int{47806, 64206, 48813, 61453, 0, 0, 0, 0} // babe, face, bead, f00d
-	result := biModuloByRadixPower(bi, 4)
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biModuloByRadixPower(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			break
-		}
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+				n: 16,
+			},
+			want: &bigInt{
+				digits: []int{64206, 49374, 47806, 61453, 51966, 48879, 57005, 0},
+				isNeg:  false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biShiftRight(tt.args.x, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biShiftRight() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiCompare(t *testing.T) {
-	var result int
+func Test_biMultiplyByRadixPower(t *testing.T) {
+	type args struct {
+		x *bigInt
+		n int
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
+	SetMaxDigits(8)
+
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+				n: 3,
+			},
+			want: &bigInt{
+				digits: []int{0, 0, 0, 48813, 64206, 49374, 47806, 61453},
+				isNeg:  false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biMultiplyByRadixPower(tt.args.x, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biMultiplyByRadixPower() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_biDivideByRadixPower(t *testing.T) {
+	type args struct {
+		x *bigInt
+		n int
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
+	SetMaxDigits(8)
+
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+				n: 3,
+			},
+			want: &bigInt{
+				digits: []int{47806, 61453, 51966, 48879, 57005, 0, 0, 0},
+				isNeg:  false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biDivideByRadixPower(tt.args.x, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biDivideByRadixPower() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_biModuloByRadixPower(t *testing.T) {
+	type args struct {
+		x *bigInt
+		n int
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
+	SetMaxDigits(8)
+
+	tests := []test{
+		{
+			args: args{
+				x: &testBigInt,
+				n: 3,
+			},
+			want: &bigInt{
+				digits: []int{48813, 64206, 49374, 0, 0, 0, 0, 0},
+				isNeg:  false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biModuloByRadixPower(tt.args.x, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biModuloByRadixPower() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_biCompare(t *testing.T) {
+	type args struct {
+		x *bigInt
+		y *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want int
+	}
+	SetMaxDigits(8)
 
 	w, x, y, z := "-bead", "-face", "dead", "beef"
 	biw, bix, biy, biz := biFromHex(w), biFromHex(x), biFromHex(y), biFromHex(z)
 
-	// neg x is less than pos y
-	result = biCompare(bix, biy)
-	if result != -1 {
-		t.Errorf("biCompare(\"%v\", \"%v\") failed, expected %v, got %v", x, y, -1, result)
+	tests := []test{
+		{
+			name: "-x < y",
+			args: args{
+				x: bix,
+				y: biy,
+			},
+			want: -1,
+		},
+		{
+			name: "x > -y",
+			args: args{
+				x: biz,
+				y: bix,
+			},
+			want: 1,
+		},
+		{
+			name: "-x < -y",
+			args: args{
+				x: bix,
+				y: biw,
+			},
+			want: -1,
+		},
+		{
+			name: "-x > -y",
+			args: args{
+				x: biw,
+				y: bix,
+			},
+			want: 1,
+		},
+		{
+			name: "x < y",
+			args: args{
+				x: biz,
+				y: biy,
+			},
+			want: -1,
+		},
+		{
+			name: "x > y",
+			args: args{
+				x: biy,
+				y: biz,
+			},
+			want: 1,
+		},
+		{
+			name: "x == y",
+			args: args{
+				x: biy,
+				y: biy,
+			},
+			want: 0,
+		},
 	}
 
-	// pos x is greater than neg y
-	result = biCompare(biz, bix)
-	if result != 1 {
-		t.Errorf("biCompare(\"%v\", \"%v\") failed, expected %v, got %v", z, x, 1, result)
-	}
-
-	// neg x is less than neg y
-	result = biCompare(bix, biw)
-	if result != -1 {
-		t.Errorf("biCompare(\"%v\", \"%v\") failed, expected %v, got %v", x, w, -1, result)
-	}
-
-	// neg x is greater than neg y
-	result = biCompare(biw, bix)
-	if result != 1 {
-		t.Errorf("biCompare(\"%v\", \"%v\") failed, expected %v, got %v", w, x, 1, result)
-	}
-
-	// pos x is less than pos y
-	result = biCompare(biz, biy)
-	if result != -1 {
-		t.Errorf("biCompare(\"%v\", \"%v\") failed, expected %v, got %v", z, y, -1, result)
-	}
-
-	// pos x is greater than pos y
-	result = biCompare(biy, biz)
-	if result != 1 {
-		t.Errorf("biCompare(\"%v\", \"%v\") failed, expected %v, got %v", y, z, 1, result)
-	}
-
-	// x is equal to y
-	result = biCompare(biz, biz)
-	if result != 0 {
-		t.Errorf("biCompare(\"%v\", \"%v\") failed, expected %v, got %v", z, z, 0, result)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biCompare(tt.args.x, tt.args.y); got != tt.want {
+				t.Errorf("biCompare() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiDivideModulo(t *testing.T) {
+func Test_biDivideModulo(t *testing.T) {
+	type args struct {
+		x *bigInt
+		y *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want *[2]bigInt
+	}
 	SetMaxDigits(8)
-	bi1 := biFromHex("deadbeef")
-	bi2 := biFromHex("beefdead")
-	expected := []int{1, 0, 0, 0, 0, 0, 0} // 1
-	result := biDivideModulo(bi1, bi2)
 
-	for i, e := range expected {
-		if e != result[0].digits[i] {
-			t.Errorf("biDivideModulo(\"deadbeef\") failed, expected %v, got %v, %v", expected, result[0].digits, result[1].digits)
-			break
-		}
+	tests := []test{
+		{
+			args: args{
+				x: biFromHex(testString),
+				y: biFromHex(reverseStr(testString)),
+			},
+			want: &[2]bigInt{
+				bigOne,
+				{
+					digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961},
+					isNeg:  false,
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biDivideModulo(tt.args.x, tt.args.y); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biDivideModulo() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiDivide(t *testing.T) {
+func Test_biDivide(t *testing.T) {
+	type args struct {
+		x *bigInt
+		y *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
 	SetMaxDigits(8)
-	bi1 := biFromHex("deadbeef")
-	bi2 := biFromHex("beefdead")
-	expected := []int{1, 0, 0, 0, 0, 0, 0} // 1
-	result := biDivide(bi1, bi2)
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biDivideModulo(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			break
-		}
+	tests := []test{
+		{
+			args: args{
+				x: biFromHex(testString),
+				y: biFromHex(reverseStr(testString)),
+			},
+			want: &bigOne,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biDivide(tt.args.x, tt.args.y); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biDivide() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBiModulo(t *testing.T) {
+func Test_biModulo(t *testing.T) {
+	type args struct {
+		x *bigInt
+		y *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
 	SetMaxDigits(8)
-	bi1 := biFromHex("deadbeef")
-	bi2 := biFromHex("beefdead")
-	expected := []int{57410, 8125, 0, 0, 0, 0, 0} // e042, 1fbd
-	result := biModulo(bi1, bi2)
 
-	for i, e := range expected {
-		if e != result.digits[i] {
-			t.Errorf("biDivideModulo(\"deadbeef\") failed, expected %v, got %v", expected, result.digits)
-			break
-		}
+	tests := []test{
+		{
+			args: args{
+				x: biFromHex(testString),
+				y: biFromHex(reverseStr(testString)),
+			},
+			want: &bigInt{
+				digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961},
+				isNeg:  false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biModulo(tt.args.x, tt.args.y); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biModulo() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-// func TestBiMultiplyMod(t *testing.T) {}
+func Test_biMultiplyMod(t *testing.T) {
+	type args struct {
+		x *bigInt
+		y *bigInt
+		m *bigInt
+	}
+	type test struct {
+		name string
+		args args
+		want *bigInt
+	}
+	SetMaxDigits(8)
 
-// func TestBiPow(t *testing.T) {}
+	tests := []test{
+		// TODO: Add test cases.
+	}
 
-// func TestBiPowMod(t *testing.T) {}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := biMultiplyMod(tt.args.x, tt.args.y, tt.args.m); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("biMultiplyMod() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+// func Test_biPow(t *testing.T) {}
+
+// func Test_biPowMod(t *testing.T) {}
