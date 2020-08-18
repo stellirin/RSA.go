@@ -9,7 +9,7 @@ var maxDigitVal = biRadix - 1
 
 // func biFromDecimal(s string) BigInt {}
 
-func biCopy(bi *bigInt) *bigInt {
+func biCopy(bi bigInt) bigInt {
 	result := newBigInt(true)
 	result.digits = append(result.digits, bi.digits...)
 	result.isNeg = bi.isNeg
@@ -18,13 +18,13 @@ func biCopy(bi *bigInt) *bigInt {
 
 // func biFromNumber(i int) BigInt {}
 
-func biToString(x *bigInt, radix int) string {
+func biToString(x bigInt, radix int) string {
 	b := newBigInt(false)
 	b.digits[0] = radix
 	qr := biDivideModulo(x, b)
 	result := hexatrigesimalToChar[qr[1].digits[0]]
-	for biCompare(&qr[0], &bigZero) == 1 {
-		qr = biDivideModulo(&qr[0], b)
+	for biCompare(qr[0], bigZero) == 1 {
+		qr = biDivideModulo(qr[0], b)
 		result += hexatrigesimalToChar[qr[1].digits[0]]
 	}
 	var isNeg string
@@ -36,7 +36,7 @@ func biToString(x *bigInt, radix int) string {
 
 // func biToDecimal(x BigInt) string {}
 
-func biToHex(x *bigInt) string {
+func biToHex(x bigInt) string {
 	var result string
 	for i := biHighIndex(x); i > -1; i-- {
 		result += digitToHex(x.digits[i])
@@ -44,7 +44,7 @@ func biToHex(x *bigInt) string {
 	return result
 }
 
-func biFromHex(s string) *bigInt {
+func biFromHex(s string) bigInt {
 	result := newBigInt(false)
 
 	// TODO: understand why we don't need to account for "-"
@@ -62,7 +62,7 @@ func biFromHex(s string) *bigInt {
 
 // func biFromString(s string, radix int) BigInt {}
 
-func biToBytes(x *bigInt) string {
+func biToBytes(x bigInt) string {
 	var result string
 	for i := biHighIndex(x); i > -1; i-- {
 		result += digitToBytes(x.digits[i])
@@ -72,7 +72,7 @@ func biToBytes(x *bigInt) string {
 
 // func biDump(b BigInt) string {}
 
-func biAdd(x *bigInt, y *bigInt) *bigInt {
+func biAdd(x bigInt, y bigInt) bigInt {
 	if x.isNeg != y.isNeg {
 		y.isNeg = !y.isNeg
 		result := biSubtract(x, y)
@@ -96,7 +96,7 @@ func biAdd(x *bigInt, y *bigInt) *bigInt {
 	return result
 }
 
-func biSubtract(x *bigInt, y *bigInt) *bigInt {
+func biSubtract(x bigInt, y bigInt) bigInt {
 	if x.isNeg != y.isNeg {
 		y.isNeg = !y.isNeg
 		result := biAdd(x, y)
@@ -140,7 +140,7 @@ func biSubtract(x *bigInt, y *bigInt) *bigInt {
 	return result
 }
 
-func biHighIndex(x *bigInt) int {
+func biHighIndex(x bigInt) int {
 	result := len(x.digits) - 1
 	for {
 		if result == 0 || x.digits[result] != 0 {
@@ -151,7 +151,7 @@ func biHighIndex(x *bigInt) int {
 	return result
 }
 
-func biNumBits(x *bigInt) int {
+func biNumBits(x bigInt) int {
 	n := biHighIndex(x)
 	d := x.digits[n]
 	m := (n + 1) * bitsPerDigit
@@ -165,7 +165,7 @@ func biNumBits(x *bigInt) int {
 	return result
 }
 
-func biMultiply(x *bigInt, y *bigInt) *bigInt {
+func biMultiply(x bigInt, y bigInt) bigInt {
 	n := biHighIndex(x)
 	t := biHighIndex(y)
 	result := newBigInt(false)
@@ -183,7 +183,7 @@ func biMultiply(x *bigInt, y *bigInt) *bigInt {
 	return result
 }
 
-func biMultiplyDigit(x *bigInt, y int) *bigInt {
+func biMultiplyDigit(x bigInt, y int) bigInt {
 	var c, uv int
 	n := biHighIndex(x)
 	result := newBigInt(false)
@@ -196,7 +196,7 @@ func biMultiplyDigit(x *bigInt, y int) *bigInt {
 	return result
 }
 
-func biShiftLeft(x *bigInt, n int) *bigInt {
+func biShiftLeft(x bigInt, n int) bigInt {
 	digitCount := n / bitsPerDigit
 	result := newBigInt(false)
 	arrayCopy(x.digits, 0, result.digits, digitCount, len(result.digits)-digitCount)
@@ -210,7 +210,7 @@ func biShiftLeft(x *bigInt, n int) *bigInt {
 	return result
 }
 
-func biShiftRight(x *bigInt, n int) *bigInt {
+func biShiftRight(x bigInt, n int) bigInt {
 	digitCount := n / bitsPerDigit
 	result := newBigInt(false)
 	arrayCopy(x.digits, digitCount, result.digits, 0, len(x.digits)-digitCount)
@@ -223,25 +223,25 @@ func biShiftRight(x *bigInt, n int) *bigInt {
 	return result
 }
 
-func biMultiplyByRadixPower(x *bigInt, n int) *bigInt {
+func biMultiplyByRadixPower(x bigInt, n int) bigInt {
 	result := newBigInt(false)
 	arrayCopy(x.digits, 0, result.digits, n, len(result.digits)-n)
 	return result
 }
 
-func biDivideByRadixPower(x *bigInt, n int) *bigInt {
+func biDivideByRadixPower(x bigInt, n int) bigInt {
 	result := newBigInt(false)
 	arrayCopy(x.digits, n, result.digits, 0, len(result.digits)-n)
 	return result
 }
 
-func biModuloByRadixPower(x *bigInt, n int) *bigInt {
+func biModuloByRadixPower(x bigInt, n int) bigInt {
 	result := newBigInt(false)
 	arrayCopy(x.digits, 0, result.digits, 0, n)
 	return result
 }
 
-func biCompare(x *bigInt, y *bigInt) int {
+func biCompare(x bigInt, y bigInt) int {
 	if x.isNeg != y.isNeg {
 		if x.isNeg {
 			// neg x is less than pos y
@@ -275,16 +275,16 @@ func biCompare(x *bigInt, y *bigInt) int {
 	return 0
 }
 
-func biDivideModulo(x *bigInt, y *bigInt) *[2]bigInt {
+func biDivideModulo(x bigInt, y bigInt) [2]bigInt {
 	nb := biNumBits(x)
 	tb := biNumBits(y)
 	origYIsNeg := y.isNeg
-	var q, r *bigInt
+	var q, r bigInt
 
 	if nb < tb {
 		// |x| < |y|
 		if x.isNeg {
-			q = biCopy(&bigOne)
+			q = biCopy(bigOne)
 			q.isNeg = !y.isNeg
 			x.isNeg = false
 			y.isNeg = false
@@ -296,7 +296,7 @@ func biDivideModulo(x *bigInt, y *bigInt) *[2]bigInt {
 			q = newBigInt(false)
 			r = biCopy(x)
 		}
-		return &[2]bigInt{*q, *r}
+		return [2]bigInt{q, r}
 	}
 
 	q = newBigInt(false)
@@ -369,9 +369,9 @@ func biDivideModulo(x *bigInt, y *bigInt) *[2]bigInt {
 	q.isNeg = x.isNeg != origYIsNeg
 	if x.isNeg {
 		if origYIsNeg {
-			q = biAdd(q, &bigOne)
+			q = biAdd(q, bigOne)
 		} else {
-			q = biSubtract(q, &bigOne)
+			q = biSubtract(q, bigOne)
 		}
 		y = biShiftRight(y, lambda)
 		r = biSubtract(y, r)
@@ -381,20 +381,18 @@ func biDivideModulo(x *bigInt, y *bigInt) *[2]bigInt {
 		r.isNeg = false
 	}
 
-	return &[2]bigInt{*q, *r}
+	return [2]bigInt{q, r}
 }
 
-func biDivide(x *bigInt, y *bigInt) *bigInt {
-	bi := biDivideModulo(x, y)[0]
-	return &bi
+func biDivide(x bigInt, y bigInt) bigInt {
+	return biDivideModulo(x, y)[0]
 }
 
-func biModulo(x *bigInt, y *bigInt) *bigInt {
-	bi := biDivideModulo(x, y)[1]
-	return &bi
+func biModulo(x bigInt, y bigInt) bigInt {
+	return biDivideModulo(x, y)[1]
 }
 
-func biMultiplyMod(x *bigInt, y *bigInt, m *bigInt) *bigInt {
+func biMultiplyMod(x bigInt, y bigInt, m bigInt) bigInt {
 	return biModulo(biMultiply(x, y), m)
 }
 

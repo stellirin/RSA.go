@@ -8,31 +8,31 @@ type barrettMu struct {
 	bkplus1 bigInt
 }
 
-func (b *barrettMu) modulo(x *bigInt) *bigInt {
+func (b *barrettMu) modulo(x bigInt) bigInt {
 	q1 := biDivideByRadixPower(x, b.k-1)
-	q2 := biMultiply(q1, &b.mu)
+	q2 := biMultiply(q1, b.mu)
 	q3 := biDivideByRadixPower(q2, b.k+1)
 	r1 := biModuloByRadixPower(x, b.k+1)
-	r2term := biMultiply(q3, &b.modulus)
+	r2term := biMultiply(q3, b.modulus)
 	r2 := biModuloByRadixPower(r2term, b.k+1)
 	r := biSubtract(r1, r2)
 	if r.isNeg {
-		r = biAdd(r, &b.bkplus1)
+		r = biAdd(r, b.bkplus1)
 	}
-	rgtem := biCompare(r, &b.modulus) >= 0
+	rgtem := biCompare(r, b.modulus) >= 0
 	for rgtem {
-		r = biSubtract(r, &b.modulus)
-		rgtem = biCompare(r, &b.modulus) >= 0
+		r = biSubtract(r, b.modulus)
+		rgtem = biCompare(r, b.modulus) >= 0
 	}
 	return r
 }
 
-func (b *barrettMu) multiplyMod(x *bigInt, y *bigInt) *bigInt {
+func (b *barrettMu) multiplyMod(x bigInt, y bigInt) bigInt {
 	xy := biMultiply(x, y)
 	return b.modulo(xy)
 }
 
-func (b *barrettMu) powMod(x *bigInt, y *bigInt) *bigInt {
+func (b *barrettMu) powMod(x bigInt, y bigInt) bigInt {
 	result := newBigInt(false)
 	result.digits[0] = 1
 	a := x
@@ -50,7 +50,7 @@ func (b *barrettMu) powMod(x *bigInt, y *bigInt) *bigInt {
 	return result
 }
 
-func newBarretMu(m *bigInt) *barrettMu {
+func newBarretMu(m bigInt) barrettMu {
 	modulus := biCopy(m)
 	k := biHighIndex(modulus) + 1
 	b2k := newBigInt(false)
@@ -60,10 +60,10 @@ func newBarretMu(m *bigInt) *barrettMu {
 	bkplus1.digits[k+1] = 1
 
 	b := barrettMu{
-		modulus: *modulus,
+		modulus: modulus,
 		k:       k,
-		mu:      *mu,
-		bkplus1: *bkplus1,
+		mu:      mu,
+		bkplus1: bkplus1,
 	}
-	return &b
+	return b
 }

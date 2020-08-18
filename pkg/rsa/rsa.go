@@ -21,17 +21,17 @@ type KeyPair struct {
 }
 
 // E returns the encryptionExponent in bigInt format.
-func (key *KeyPair) E() *bigInt {
+func (key *KeyPair) E() bigInt {
 	return biFromHex(key.encryptionExponent)
 }
 
 // D returns the decryptionExponent in bigInt format.
-func (key *KeyPair) D() *bigInt {
+func (key *KeyPair) D() bigInt {
 	return biFromHex(key.decryptionExponent)
 }
 
 // M returns the modulis in bigInt format.
-func (key *KeyPair) M() *bigInt {
+func (key *KeyPair) M() bigInt {
 	return biFromHex(key.modulus)
 }
 
@@ -47,7 +47,7 @@ func (key *KeyPair) Radix() int {
 }
 
 // Barrett returns a new barretMu.
-func (key *KeyPair) Barrett() *barrettMu {
+func (key *KeyPair) Barrett() barrettMu {
 	return newBarretMu(key.M())
 }
 

@@ -6,7 +6,7 @@ import (
 )
 
 // Used to store benchmark results
-var rBigInt *bigInt
+var rBigInt bigInt
 var rString string
 var rInt int
 
@@ -24,27 +24,27 @@ func Benchmark_biCopy(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biCopy(&testBigInt)
+		rBigInt = biCopy(testBigInt)
 	}
 }
 
 func Test_biCopy(t *testing.T) {
 	type args struct {
-		bi *bigInt
+		bi bigInt
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
 	tests := []test{
 		{
 			args: args{
-				bi: &testBigInt,
+				bi: testBigInt,
 			},
-			want: &testBigInt,
+			want: testBigInt,
 		},
 	}
 
@@ -63,7 +63,7 @@ func Test_biCopy(t *testing.T) {
 
 func Test_biToString(t *testing.T) {
 	type args struct {
-		x     *bigInt
+		x     bigInt
 		radix int
 	}
 	type test struct {
@@ -93,13 +93,13 @@ func Benchmark_biToHex(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rString = biToHex(&testBigInt)
+		rString = biToHex(testBigInt)
 	}
 }
 
 func Test_biToHex(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 	}
 	type test struct {
 		name string
@@ -111,7 +111,7 @@ func Test_biToHex(t *testing.T) {
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 			},
 			want: testString,
 		},
@@ -142,7 +142,7 @@ func Test_biFromHex(t *testing.T) {
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
@@ -151,7 +151,7 @@ func Test_biFromHex(t *testing.T) {
 			args: args{
 				s: testString,
 			},
-			want: &testBigInt,
+			want: testBigInt,
 		},
 	}
 
@@ -171,13 +171,13 @@ func Benchmark_biToBytes(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rString = biToBytes(&testBigInt)
+		rString = biToBytes(testBigInt)
 	}
 }
 
 func Test_biToBytes(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 	}
 	type test struct {
 		name string
@@ -189,7 +189,7 @@ func Test_biToBytes(t *testing.T) {
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 			},
 			want: string(testRunes),
 		},
@@ -219,13 +219,13 @@ func Benchmark_biAdd(b *testing.B) {
 
 func Test_biAdd(t *testing.T) {
 	type args struct {
-		x *bigInt
-		y *bigInt
+		x bigInt
+		y bigInt
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
@@ -235,7 +235,7 @@ func Test_biAdd(t *testing.T) {
 				x: biFromHex("deadbeef"),
 				y: biFromHex("beefdead"),
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{40348, 40349, 1, 0, 0, 0, 0, 0},
 				isNeg:  false,
 			},
@@ -264,13 +264,13 @@ func Benchmark_biSubtract(b *testing.B) {
 
 func Test_biSubtract(t *testing.T) {
 	type args struct {
-		x *bigInt
-		y *bigInt
+		x bigInt
+		y bigInt
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
@@ -280,7 +280,7 @@ func Test_biSubtract(t *testing.T) {
 				x: biFromHex(testString),
 				y: biFromHex(reverseStr(testString)),
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961},
 				isNeg:  false,
 			},
@@ -301,13 +301,13 @@ func Benchmark_biHighIndex(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rInt = biHighIndex(&testBigInt)
+		rInt = biHighIndex(testBigInt)
 	}
 }
 
 func Test_biHighIndex(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 	}
 	type test struct {
 		name string
@@ -319,7 +319,7 @@ func Test_biHighIndex(t *testing.T) {
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 			},
 			want: 7,
 		},
@@ -339,13 +339,13 @@ func Benchmark_biNumBits(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rInt = biNumBits(&testBigInt)
+		rInt = biNumBits(testBigInt)
 	}
 }
 
 func Test_biNumBits(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 	}
 	type test struct {
 		name string
@@ -357,7 +357,7 @@ func Test_biNumBits(t *testing.T) {
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 			},
 			want: 128,
 		},
@@ -377,29 +377,29 @@ func Benchmark_biMultiply(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biMultiply(&testBigInt, &testBigInt)
+		rBigInt = biMultiply(testBigInt, testBigInt)
 	}
 }
 
 func Test_biMultiply(t *testing.T) {
 	type args struct {
-		x *bigInt
-		y *bigInt
+		x bigInt
+		y bigInt
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(16)
 
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
-				y: &testBigInt,
+				x: testBigInt,
+				y: testBigInt,
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{
 					16617, 20593, 42861, 32538, 45046, 25231, 13697, 47718,
 					1165, 9698, 10208, 22465, 22231, 33427, 52499, 49585,
@@ -423,29 +423,29 @@ func Benchmark_biMultiplyDigit(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biMultiplyDigit(&testBigInt, 16)
+		rBigInt = biMultiplyDigit(testBigInt, 16)
 	}
 }
 
 func Test_biMultiplyDigit(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 		y int
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(16)
 
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 				y: 16,
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{
 					60112, 44267, 3567, 44012, 219, 45039, 61180, 60123,
 					13, 0, 0, 0, 0, 0, 0, 0,
@@ -469,29 +469,29 @@ func Benchmark_biShiftLeft(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biShiftLeft(&testBigInt, 16)
+		rBigInt = biShiftLeft(testBigInt, 16)
 	}
 }
 
 func Test_biShiftLeft(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 		n int
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 				n: 16,
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{0, 48813, 64206, 49374, 47806, 61453, 51966, 48879},
 			},
 		},
@@ -511,29 +511,29 @@ func Benchmark_biShiftRight(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biShiftRight(&testBigInt, 16)
+		rBigInt = biShiftRight(testBigInt, 16)
 	}
 }
 
 func Test_biShiftRight(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 		n int
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 				n: 16,
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{64206, 49374, 47806, 61453, 51966, 48879, 57005, 0},
 				isNeg:  false,
 			},
@@ -554,29 +554,29 @@ func Benchmark_biMultiplyByRadixPower(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biMultiplyByRadixPower(&testBigInt, 3)
+		rBigInt = biMultiplyByRadixPower(testBigInt, 3)
 	}
 }
 
 func Test_biMultiplyByRadixPower(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 		n int
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 				n: 3,
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{0, 0, 0, 48813, 64206, 49374, 47806, 61453},
 				isNeg:  false,
 			},
@@ -597,29 +597,29 @@ func Benchmark_biDivideByRadixPower(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biDivideByRadixPower(&testBigInt, 3)
+		rBigInt = biDivideByRadixPower(testBigInt, 3)
 	}
 }
 
 func Test_biDivideByRadixPower(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 		n int
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 				n: 3,
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{47806, 61453, 51966, 48879, 57005, 0, 0, 0},
 				isNeg:  false,
 			},
@@ -640,29 +640,29 @@ func Benchmark_biModuloByRadixPower(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biModuloByRadixPower(&testBigInt, 3)
+		rBigInt = biModuloByRadixPower(testBigInt, 3)
 	}
 }
 
 func Test_biModuloByRadixPower(t *testing.T) {
 	type args struct {
-		x *bigInt
+		x bigInt
 		n int
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
 	tests := []test{
 		{
 			args: args{
-				x: &testBigInt,
+				x: testBigInt,
 				n: 3,
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{48813, 64206, 49374, 0, 0, 0, 0, 0},
 				isNeg:  false,
 			},
@@ -683,14 +683,14 @@ func Benchmark_biCompare(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rInt = biCompare(&testBigInt, &testBigInt)
+		rInt = biCompare(testBigInt, testBigInt)
 	}
 }
 
 func Test_biCompare(t *testing.T) {
 	type args struct {
-		x *bigInt
-		y *bigInt
+		x bigInt
+		y bigInt
 	}
 	type test struct {
 		name string
@@ -775,19 +775,19 @@ func Benchmark_biDivideModulo(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = &biDivideModulo(&testBigInt, &testBigInt)[0]
+		rBigInt = biDivideModulo(testBigInt, testBigInt)[0]
 	}
 }
 
 func Test_biDivideModulo(t *testing.T) {
 	type args struct {
-		x *bigInt
-		y *bigInt
+		x bigInt
+		y bigInt
 	}
 	type test struct {
 		name string
 		args args
-		want *[2]bigInt
+		want [2]bigInt
 	}
 	SetMaxDigits(8)
 
@@ -797,7 +797,7 @@ func Test_biDivideModulo(t *testing.T) {
 				x: biFromHex(testString),
 				y: biFromHex(reverseStr(testString)),
 			},
-			want: &[2]bigInt{
+			want: [2]bigInt{
 				bigOne,
 				{
 					digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961},
@@ -821,19 +821,19 @@ func Benchmark_biDivide(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biDivide(&testBigInt, &testBigInt)
+		rBigInt = biDivide(testBigInt, testBigInt)
 	}
 }
 
 func Test_biDivide(t *testing.T) {
 	type args struct {
-		x *bigInt
-		y *bigInt
+		x bigInt
+		y bigInt
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
@@ -843,7 +843,7 @@ func Test_biDivide(t *testing.T) {
 				x: biFromHex(testString),
 				y: biFromHex(reverseStr(testString)),
 			},
-			want: &bigOne,
+			want: bigOne,
 		},
 	}
 
@@ -861,19 +861,19 @@ func Benchmark_biModulo(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		rBigInt = biModulo(&testBigInt, &testBigInt)
+		rBigInt = biModulo(testBigInt, testBigInt)
 	}
 }
 
 func Test_biModulo(t *testing.T) {
 	type args struct {
-		x *bigInt
-		y *bigInt
+		x bigInt
+		y bigInt
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 
@@ -883,7 +883,7 @@ func Test_biModulo(t *testing.T) {
 				x: biFromHex(testString),
 				y: biFromHex(reverseStr(testString)),
 			},
-			want: &bigInt{
+			want: bigInt{
 				digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961},
 				isNeg:  false,
 			},
@@ -903,14 +903,14 @@ func Test_biModulo(t *testing.T) {
 
 func Test_biMultiplyMod(t *testing.T) {
 	type args struct {
-		x *bigInt
-		y *bigInt
-		m *bigInt
+		x bigInt
+		y bigInt
+		m bigInt
 	}
 	type test struct {
 		name string
 		args args
-		want *bigInt
+		want bigInt
 	}
 	SetMaxDigits(8)
 

@@ -11,7 +11,7 @@ var zeroArray []int
 var bigZero, bigOne bigInt
 
 // newBigInt initializes a new BigInt.
-func newBigInt(flag bool) *bigInt {
+func newBigInt(flag bool) bigInt {
 	bi := bigInt{}
 	if flag {
 		bi.digits = []int{}
@@ -21,7 +21,7 @@ func newBigInt(flag bool) *bigInt {
 		bi.digits = make([]int, len(zeroArray), len(zeroArray))
 	}
 	bi.isNeg = false
-	return &bi
+	return bi
 }
 
 // SetMaxDigits initializes the RSA library.
@@ -29,8 +29,8 @@ func SetMaxDigits(value int) {
 	if maxDigits != value {
 		maxDigits = value
 		zeroArray = make([]int, value, value)
-		bigZero = *newBigInt(false)
-		bigOne = *newBigInt(false)
+		bigZero = newBigInt(false)
+		bigOne = newBigInt(false)
 		bigOne.digits[0] = 1
 	}
 }
