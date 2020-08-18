@@ -42,7 +42,7 @@ func main() {
 	ss := make([]string, 26, 26)
 
 	for i := range s {
-		ss[i] = rsa.EncryptedString(key, string(i), 0, 0)
+		ss[i] = rsa.EncryptedString(key, string(rune(i)), 0, 0)
 		PrintMemUsage()
 	}
 }
