@@ -5,6 +5,9 @@ import (
 	"testing"
 )
 
+// Used to store benchmark results
+var result *bigInt
+
 var testRunes = []rune{222, 173, 190, 239, 202, 254, 240, 13, 186, 190, 192, 222, 250, 206, 190, 173}
 var testString = "deadbeefcafef00dbabec0defacebead"
 var testBigInt = bigInt{
@@ -13,6 +16,16 @@ var testBigInt = bigInt{
 }
 
 // func Test_biFromDecimal(t *testing.T) {}
+
+func Benchmark_biCopy(b *testing.B) {
+	SetMaxDigits(8)
+
+	var r *bigInt
+	for n := 0; n < b.N; n++ {
+		r = biCopy(&testBigInt)
+	}
+	result = r
+}
 
 func Test_biCopy(t *testing.T) {
 	type args struct {
