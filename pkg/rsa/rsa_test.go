@@ -16,7 +16,7 @@ func TestKeyPair(t *testing.T) {
 	key := NewKeyPair("deadbeef", "beefdead", modulus, 0)
 
 	expected = []int{48879, 57005} // beef, dead
-	result = key.E().digits[0:len(expected)]
+	result = key.E().Digits[0:len(expected)]
 	for i, e := range expected {
 		if e != result[i] {
 			t.Errorf("KeyPair().E() failed, expected %v, got %v", expected, result)
@@ -25,7 +25,7 @@ func TestKeyPair(t *testing.T) {
 	}
 
 	expected = []int{57005, 48879} // dead, beef
-	result = key.D().digits[0:len(expected)]
+	result = key.D().Digits[0:len(expected)]
 	for i, e := range expected {
 		if e != result[i] {
 			t.Errorf("KeyPair().D() failed, expected %v, got %v", expected, result)
@@ -34,7 +34,7 @@ func TestKeyPair(t *testing.T) {
 	}
 
 	expected = []int{34927, 13075, 63153, 37582, 1901, 63073, 61194, 41266, 48258, 6449, 41138, 4470, 11166, 37274, 30705, 57722, 27908, 42173, 22227, 2109, 37894, 22648, 41679, 17892, 44306, 9786, 56126, 35755, 30146, 63354, 43910, 31445, 21477, 26453, 238, 57059, 25197, 43810, 21489, 7159, 46402, 9506, 63970, 7140, 3732, 21046, 31109, 51226, 22994, 32353, 38579, 10054, 26103, 3106, 35525, 3827, 62031, 47763, 48749, 29417, 32761, 29678, 24968, 45486}
-	result = key.M().digits[0:len(expected)]
+	result = key.M().Digits[0:len(expected)]
 	for i, e := range expected {
 		if e != result[i] {
 			t.Errorf("KeyPair().M() failed, expected %v, got %v", expected, result)

@@ -1,40 +1,5 @@
 package rsa
 
-// bigInt represents a big integer as an array of small integers.
-type bigInt struct {
-	digits []int
-	isNeg  bool
-}
-
-var maxDigits int
-var zeroArray []int
-var bigZero, bigOne bigInt
-
-// newBigInt initializes a new BigInt.
-func newBigInt(flag bool) bigInt {
-	bi := bigInt{}
-	if flag {
-		bi.digits = []int{}
-	} else {
-		// JS manually populates and copies zeroArray,
-		// but we can simply make a new slice using the length of zeroArray
-		bi.digits = make([]int, len(zeroArray), len(zeroArray))
-	}
-	bi.isNeg = false
-	return bi
-}
-
-// SetMaxDigits initializes the RSA library.
-func SetMaxDigits(value int) {
-	if maxDigits != value {
-		maxDigits = value
-		zeroArray = make([]int, value, value)
-		bigZero = newBigInt(false)
-		bigOne = newBigInt(false)
-		bigOne.digits[0] = 1
-	}
-}
-
 func reverseStr(s string) string {
 	result := ""
 	for i := len(s) - 1; i > -1; i-- {

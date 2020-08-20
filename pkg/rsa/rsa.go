@@ -21,24 +21,24 @@ type KeyPair struct {
 }
 
 // E returns the encryptionExponent in bigInt format.
-func (key *KeyPair) E() bigInt {
-	return biFromHex(key.encryptionExponent)
+func (key *KeyPair) E() BigInt {
+	return BiFromHex(key.encryptionExponent)
 }
 
 // D returns the decryptionExponent in bigInt format.
-func (key *KeyPair) D() bigInt {
-	return biFromHex(key.decryptionExponent)
+func (key *KeyPair) D() BigInt {
+	return BiFromHex(key.decryptionExponent)
 }
 
 // M returns the modulis in bigInt format.
-func (key *KeyPair) M() bigInt {
-	return biFromHex(key.modulus)
+func (key *KeyPair) M() BigInt {
+	return BiFromHex(key.modulus)
 }
 
 // ChunkSize returns the current chunk size.
 func (key *KeyPair) ChunkSize() int {
 	// i := key.keylen / 8
-	return 2 * biHighIndex(key.M())
+	return 2 * BiHighIndex(key.M())
 }
 
 // Radix returns biRadixBits.
@@ -47,8 +47,8 @@ func (key *KeyPair) Radix() int {
 }
 
 // Barrett returns a new barretMu.
-func (key *KeyPair) Barrett() barrettMu {
-	return newBarretMu(key.M())
+func (key *KeyPair) Barrett() BarrettMu {
+	return NewBarretMu(key.M())
 }
 
 // NewKeyPair initializes a new RSAKeyPair.
@@ -161,27 +161,27 @@ func EncryptedString(key KeyPair, s string, pad int, encoding int) string {
 
 	for i = 0; i < al; i += key.ChunkSize() {
 		// Get a block.
-		block := newBigInt(false)
+		block := NewBigInt(false)
 
 		j = 0
 
 		for k = i; k < i+key.ChunkSize(); j++ {
-			block.digits[j] = a[k]
+			block.Digits[j] = a[k]
 			k++
-			block.digits[j] += a[k] << 8
+			block.Digits[j] += a[k] << 8
 			k++
 		}
 
 		var text string
 		// Encrypt it, convert it to text, and append it to the result.
-		crypt := barrett.powMod(block, key.E())
+		crypt := barrett.PowMod(block, key.E())
 		if encodingtype == 1 {
-			text = biToBytes(crypt)
+			text = BiToBytes(crypt)
 		} else {
 			if key.Radix() == 16 {
-				text = biToHex(crypt)
+				text = BiToHex(crypt)
 			} else {
-				text = biToString(crypt, key.Radix())
+				text = BiToString(crypt, key.Radix())
 			}
 		}
 		result += text
