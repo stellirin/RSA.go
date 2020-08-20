@@ -48,7 +48,7 @@ func (key *KeyPair) ChunkSize() int {
 
 // Radix returns biRadixBits.
 func (key *KeyPair) Radix() int {
-	return biRadixBits
+	return BiRadixBits
 }
 
 // Barrett returns a new barretMu.

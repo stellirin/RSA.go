@@ -10,6 +10,17 @@ var maxDigits int
 var zeroArray []int
 var bigZero, bigOne BigInt
 
+// SetMaxDigits initializes the RSA library.
+func SetMaxDigits(value int) {
+	if maxDigits != value {
+		maxDigits = value
+		zeroArray = make([]int, value, value)
+		bigZero = NewBigInt(false)
+		bigOne = NewBigInt(false)
+		bigOne.Digits[0] = 1
+	}
+}
+
 // NewBigInt initializes a new BigInt.
 func NewBigInt(flag bool) BigInt {
 	bi := BigInt{}
@@ -24,24 +35,13 @@ func NewBigInt(flag bool) BigInt {
 	return bi
 }
 
-// SetMaxDigits initializes the RSA library.
-func SetMaxDigits(value int) {
-	if maxDigits != value {
-		maxDigits = value
-		zeroArray = make([]int, value, value)
-		bigZero = NewBigInt(false)
-		bigOne = NewBigInt(false)
-		bigOne.Digits[0] = 1
-	}
-}
+var BiRadixBits = 16
+var BiRadix = 1 << 16 // = 2^16 = 65536
+var BiHalfRadix = BiRadix >> 1
+var BiRadixSquared = BiRadix * BiRadix
 
-var biRadixBits = 16
-var bitsPerDigit = biRadixBits
-var biRadix = 1 << 16 // = 2^16 = 65536
-var biHalfRadix = biRadix >> 1
-var biRadixSquared = biRadix * biRadix
-
-var maxDigitVal = biRadix - 1
+var bitsPerDigit = BiRadixBits
+var maxDigitVal = BiRadix - 1
 
 // func biFromDecimal(s string) BigInt {}
 
@@ -123,7 +123,7 @@ func BiAdd(x BigInt, y BigInt) BigInt {
 		n = x.Digits[i] + y.Digits[i] + c
 		result.Digits[i] = n & 0xFFFF
 		c = 0
-		if n >= biRadix {
+		if n >= BiRadix {
 			c++
 		}
 	}
@@ -152,7 +152,7 @@ func BiSubtract(x BigInt, y BigInt) BigInt {
 		n = x.Digits[i] - y.Digits[i] + c
 		result.Digits[i] = n & 0xFFFF
 		if result.Digits[i] < 0 {
-			result.Digits[i] += biRadix
+			result.Digits[i] += BiRadix
 		}
 		c = 0
 		if n < 0 {
@@ -166,7 +166,7 @@ func BiSubtract(x BigInt, y BigInt) BigInt {
 			n = 0 - result.Digits[i] + c
 			result.Digits[i] = n & 0xFFFF
 			if result.Digits[i] < 0 {
-				result.Digits[i] += biRadix
+				result.Digits[i] += BiRadix
 			}
 			c = 0
 			if n < 0 {
@@ -220,7 +220,7 @@ func BiMultiply(x BigInt, y BigInt) BigInt {
 		for j := 0; j <= n; j, k = j+1, k+1 {
 			uv = result.Digits[k] + x.Digits[j]*y.Digits[i] + c
 			result.Digits[k] = uv & maxDigitVal
-			c = uv >> biRadixBits
+			c = uv >> BiRadixBits
 		}
 		result.Digits[i+n+1] = c
 	}
@@ -235,7 +235,7 @@ func BiMultiplyDigit(x BigInt, y int) BigInt {
 	for j := 0; j <= n; j++ {
 		uv = result.Digits[j] + x.Digits[j]*y + c
 		result.Digits[j] = uv & maxDigitVal
-		c = uv >> biRadixBits
+		c = uv >> BiRadixBits
 	}
 	result.Digits[1+n] = c
 	return result
@@ -350,7 +350,7 @@ func BiDivideModulo(x BigInt, y BigInt) [2]BigInt {
 	// Normalize Y.
 	t := ceil(tb, bitsPerDigit) - 1
 	lambda := 0
-	for y.Digits[t] < biHalfRadix {
+	for y.Digits[t] < BiHalfRadix {
 		y = BiShiftLeft(y, 1)
 		lambda++
 		tb++
@@ -390,15 +390,15 @@ func BiDivideModulo(x BigInt, y BigInt) [2]BigInt {
 		if ri == yt {
 			q.Digits[i-t-1] = maxDigitVal
 		} else {
-			q.Digits[i-t-1] = (ri*biRadix + ri1) / yt
+			q.Digits[i-t-1] = (ri*BiRadix + ri1) / yt
 		}
 
-		c1 := q.Digits[i-t-1] * ((yt * biRadix) + yt1)
-		c2 := (ri * biRadixSquared) + ((ri1 * biRadix) + ri2)
+		c1 := q.Digits[i-t-1] * ((yt * BiRadix) + yt1)
+		c2 := (ri * BiRadixSquared) + ((ri1 * BiRadix) + ri2)
 		for c1 > c2 {
 			q.Digits[i-t-1]--
-			c1 = q.Digits[i-t-1] * ((yt * biRadix) | yt1)
-			c2 = (ri * biRadix * biRadix) + ((ri1 * biRadix) + ri2)
+			c1 = q.Digits[i-t-1] * ((yt * BiRadix) | yt1)
+			c2 = (ri * BiRadix * BiRadix) + ((ri1 * BiRadix) + ri2)
 		}
 
 		b = BiMultiplyByRadixPower(y, i-t-1)
