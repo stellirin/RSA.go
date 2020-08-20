@@ -1,4 +1,8 @@
-package rsa
+package barrett
+
+import (
+	. "github.com/stellirin/RSA.go/bigint"
+)
 
 // BarrettMu is a struct.
 type BarrettMu struct {

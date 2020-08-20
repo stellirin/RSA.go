@@ -2,6 +2,8 @@ package rsa
 
 import (
 	"testing"
+
+	. "github.com/stellirin/RSA.go/bigint"
 )
 
 var encryptionExponent = "10001"

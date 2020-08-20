@@ -1,4 +1,4 @@
-package rsa
+package bigint
 
 // BigInt represents a big integer as an array of small integers.
 type BigInt struct {

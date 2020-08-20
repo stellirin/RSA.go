@@ -1,4 +1,4 @@
-package rsa
+package bigint
 
 func reverseStr(s string) string {
 	result := ""

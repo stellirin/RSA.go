@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/stellirin/RSA.go/pkg/rsa"
+	rsa "github.com/stellirin/RSA.go"
 )
 
 // PrintMemUsage outputs the current, total and OS memory being used. As well as the number

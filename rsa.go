@@ -1,6 +1,11 @@
 package rsa
 
-import "math/rand"
+import (
+	"math/rand"
+
+	. "github.com/stellirin/RSA.go/barrett"
+	. "github.com/stellirin/RSA.go/bigint"
+)
 
 var RSAAPP = map[string]int{
 	"NoPadding":       1,

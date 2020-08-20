@@ -1,4 +1,4 @@
-package rsa
+package bigint
 
 import (
 	"reflect"
