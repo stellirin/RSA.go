@@ -132,7 +132,6 @@ func EncryptedString(key KeyPair, s string, pad int, encoding int) string {
 	for j > 0 {
 		if padtype == 2 {
 			rpad := rand.Intn(256)
-
 			a[i] = rpad
 		} else {
 			a[i] = 0

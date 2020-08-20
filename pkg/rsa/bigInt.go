@@ -91,8 +91,13 @@ func biAdd(x bigInt, y bigInt) bigInt {
 			c++
 		}
 	}
-	result.isNeg = x.isNeg
 
+	// Check for the unbelievably stupid degenerate case of r == -0.
+	if result.digits[0] == 0 && biHighIndex(result) == 0 {
+		result.isNeg = false
+	} else {
+		result.isNeg = x.isNeg
+	}
 	return result
 }
 
@@ -137,6 +142,10 @@ func biSubtract(x bigInt, y bigInt) bigInt {
 		result.isNeg = x.isNeg
 	}
 
+	// Check for the unbelievably stupid degenerate case of r == -0.
+	if result.digits[0] == 0 && biHighIndex(result) == 0 {
+		result.isNeg = false
+	}
 	return result
 }
 
@@ -392,9 +401,7 @@ func biModulo(x bigInt, y bigInt) bigInt {
 	return biDivideModulo(x, y)[1]
 }
 
-func biMultiplyMod(x bigInt, y bigInt, m bigInt) bigInt {
-	return biModulo(biMultiply(x, y), m)
-}
+// func biMultiplyMod(x bigInt, y bigInt, m bigInt) bigInt {}
 
 // func biPow(x BigInt, y BigInt) BigInt {}
 

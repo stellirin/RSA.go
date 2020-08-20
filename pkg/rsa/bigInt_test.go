@@ -227,17 +227,40 @@ func Test_biAdd(t *testing.T) {
 		args args
 		want bigInt
 	}
-	SetMaxDigits(8)
+	SetMaxDigits(16)
 
 	tests := []test{
 		{
+			name: "Pos+Pos",
 			args: args{
-				x: biFromHex("deadbeef"),
-				y: biFromHex("beefdead"),
+				x: biFromHex(testString),
+				y: biFromHex(testString),
 			},
 			want: bigInt{
-				digits: []int{40348, 40349, 1, 0, 0, 0, 0, 0},
+				digits: []int{32090, 62877, 33213, 30077, 57371, 38397, 32223, 48475, 1, 0, 0, 0, 0, 0, 0, 0},
 				isNeg:  false,
+			},
+		},
+		{
+			name: "Pos+Neg",
+			args: args{
+				x: biFromHex(testString),
+				y: biFromHex("-" + reverseStr(testString)),
+			},
+			want: bigInt{
+				digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961, 0, 0, 0, 0, 0, 0, 0, 0},
+				isNeg:  false,
+			},
+		},
+		{
+			name: "Neg+Neg",
+			args: args{
+				x: biFromHex("-" + reverseStr(testString)),
+				y: biFromHex("-" + reverseStr(testString)),
+			},
+			want: bigInt{
+				digits: []int{46554, 64983, 57177, 40991, 55127, 55833, 55647, 46551, 1, 0, 0, 0, 0, 0, 0, 0},
+				isNeg:  true,
 			},
 		},
 	}
@@ -272,16 +295,39 @@ func Test_biSubtract(t *testing.T) {
 		args args
 		want bigInt
 	}
-	SetMaxDigits(8)
+	SetMaxDigits(16)
 
 	tests := []test{
 		{
+			name: "Pos-Pos",
 			args: args{
 				x: biFromHex(testString),
 				y: biFromHex(reverseStr(testString)),
 			},
 			want: bigInt{
-				digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961},
+				digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961, 0, 0, 0, 0, 0, 0, 0, 0},
+				isNeg:  false,
+			},
+		},
+		{
+			name: "Pos-Neg",
+			args: args{
+				x: biFromHex(testString),
+				y: biFromHex("-" + reverseStr(testString)),
+			},
+			want: bigInt{
+				digits: []int{39322, 63930, 45195, 35534, 56249, 47115, 43935, 47513, 1, 0, 0, 0, 0, 0, 0, 0},
+				isNeg:  false,
+			},
+		},
+		{
+			name: "Neg-Neg",
+			args: args{
+				x: biFromHex("-" + reverseStr(testString)),
+				y: biFromHex("-" + reverseStr(testString)),
+			},
+			want: bigInt{
+				digits: []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 				isNeg:  false,
 			},
 		},
@@ -789,10 +835,11 @@ func Test_biDivideModulo(t *testing.T) {
 		args args
 		want [2]bigInt
 	}
-	SetMaxDigits(8)
+	SetMaxDigits(16)
 
 	tests := []test{
 		{
+			name: "Pos/Pos",
 			args: args{
 				x: biFromHex(testString),
 				y: biFromHex(reverseStr(testString)),
@@ -800,7 +847,58 @@ func Test_biDivideModulo(t *testing.T) {
 			want: [2]bigInt{
 				bigOne,
 				{
-					digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961},
+					digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961, 0, 0, 0, 0, 0, 0, 0, 0},
+					isNeg:  false,
+				},
+			},
+		},
+		{
+			name: "Neg/Neg",
+			args: args{
+				x: biFromHex("-" + testString),
+				y: biFromHex("-" + reverseStr(testString)),
+			},
+			want: [2]bigInt{
+				{
+					digits: []int{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+					isNeg:  false,
+				},
+				{
+					digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961, 0, 0, 0, 0, 0, 0, 0, 0},
+					isNeg:  true,
+				},
+			},
+		},
+		{
+			name: "Small/Big",
+			args: args{
+				x: biFromHex(testString[0:24]),
+				y: biFromHex(reverseStr(testString)),
+			},
+			want: [2]bigInt{
+				{
+					digits: []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+					isNeg:  false,
+				},
+				{
+					digits: []int{49374, 47806, 61453, 51966, 48879, 57005, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+					isNeg:  false,
+				},
+			},
+		},
+		{
+			name: "SmallNeg/BigPos",
+			args: args{
+				x: biFromHex("-" + testString[0:24]),
+				y: biFromHex(reverseStr(testString)),
+			},
+			want: [2]bigInt{
+				{
+					digits: []int{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+					isNeg:  true,
+				},
+				{
+					digits: []int{6671, 17453, 65439, 1296, 11452, 3679, 60591, 56043, 0, 0, 0, 0, 0, 0, 0, 0},
 					isNeg:  false,
 				},
 			},
@@ -901,31 +999,7 @@ func Test_biModulo(t *testing.T) {
 
 // func Test_biMultiplyMod(t *testing.T) {}
 
-func Test_biMultiplyMod(t *testing.T) {
-	type args struct {
-		x bigInt
-		y bigInt
-		m bigInt
-	}
-	type test struct {
-		name string
-		args args
-		want bigInt
-	}
-	SetMaxDigits(8)
-
-	tests := []test{
-		// TODO: Add test cases.
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := biMultiplyMod(tt.args.x, tt.args.y, tt.args.m); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("biMultiplyMod() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+// func Test_biMultiplyMod(t *testing.T) {}
 
 // func Test_biPow(t *testing.T) {}
 

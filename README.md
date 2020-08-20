@@ -8,6 +8,15 @@ This is a learning tool, Go has its own `crypto/rsa` package that is probably fa
 
 **Don't use this.**
 
+## Code coverage
+
+Go has built-in tools fot benchmarking, testing, and visualizing test code coverage.
+
+```sh
+go test -bench=. -benchmem
+go test -covermode=count -coverprofile=coverage.out && go tool cover -html=coverage.out
+```
+
 ## A note about pointers
 
 Notice in the Git history that I changed `bigInt` operations to use pointers, then reverted it. Using pointers was actually **slower** than copying the values. **[Explanation](https://segment.com/blog/allocation-efficiency-in-high-performance-go-services/):**
