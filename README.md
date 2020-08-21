@@ -2,6 +2,8 @@
 
 A reimplementation of [RSA.js](https://github.com/stellirin/RSA.js) in Go.
 
+[![codecov](https://codecov.io/gh/stellirin/RSA.go/branch/master/graph/badge.svg)](https://codecov.io/gh/stellirin/RSA.go)
+
 ## But why
 
 This is a learning tool, Go has its own `crypto/rsa` package that is probably far superior.
@@ -10,7 +12,9 @@ This is a learning tool, Go has its own `crypto/rsa` package that is probably fa
 
 ## Code coverage
 
-Go has built-in tools fot benchmarking, testing, and visualizing test code coverage.
+Go has built-in tools for benchmarking, testing, and visualizing test code coverage.
+
+The GitHub Actions workflow uses this same tooling for CodeCov.
 
 ```sh
 go test -bench=. -benchmem
@@ -58,7 +62,3 @@ I confirmed the above with Go benchmarks:
 | Benchmark_biModulo-8               |   2050354 |  578 ns/op |   3191080 |  372 ns/op | **64%**    |
 
 Every operation that involves creating or even only reading a `bigInt` is significantly slower when using a pointer.
-
-## Links
-
-- [golang-book.com](https://www.golang-book.com/)
