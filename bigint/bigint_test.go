@@ -11,15 +11,73 @@ var rString string
 var rInt int
 
 var testRunes = []rune{222, 173, 190, 239, 202, 254, 240, 13, 186, 190, 192, 222, 250, 206, 190, 173}
-var testString = "deadbeefcafef00dbabec0defacebead"
+var testString = "dead" + "beef" + "cafe" + "f00d" + "babe" + "c0de" + "face" + "bead"
 var testBigInt = BigInt{
 	Digits: []int{48813, 64206, 49374, 47806, 61453, 51966, 48879, 57005}, // bead, face, c0de, babe, f00d, cafe, beef, dead
 	IsNeg:  false,
 }
 
-// func Test_biFromDecimal(t *testing.T) {}
+func Test_SetMaxDigits(t *testing.T) {
+	type args struct {
+		value int
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			SetMaxDigits(tt.args.value)
+		})
+	}
+}
 
-func Benchmark_biCopy(b *testing.B) {
+func Test_NewBigInt(t *testing.T) {
+	type args struct {
+		flag bool
+	}
+	type test struct {
+		name string
+		args args
+		want BigInt
+	}
+
+	tests := []test{
+		{
+			args: args{
+				flag: false,
+			},
+			want: BigInt{
+				Digits: []int{0, 0, 0, 0, 0, 0, 0, 0},
+				IsNeg:  false,
+			},
+		},
+		{
+			args: args{
+				flag: true,
+			},
+			want: BigInt{
+				Digits: []int{},
+				IsNeg:  false,
+			},
+		},
+	}
+
+	SetMaxDigits(8)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewBigInt(tt.args.flag); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewBigInt() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+// func Test_BiFromDecimal(t *testing.T) {}
+
+func Benchmark_BiCopy(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -28,7 +86,7 @@ func Benchmark_biCopy(b *testing.B) {
 	}
 }
 
-func Test_biCopy(t *testing.T) {
+func Test_BiCopy(t *testing.T) {
 	type args struct {
 		bi BigInt
 	}
@@ -57,11 +115,11 @@ func Test_biCopy(t *testing.T) {
 	}
 }
 
-// func Test_biFromNumber(t *testing.T) {}
+// func Test_BiFromNumber(t *testing.T) {}
 
-// func Benchmark_biToString(b *testing.B) {}
+// func Benchmark_BiToString(b *testing.B) {}
 
-func Test_biToString(t *testing.T) {
+func Test_BiToString(t *testing.T) {
 	type args struct {
 		x     BigInt
 		radix int
@@ -86,9 +144,9 @@ func Test_biToString(t *testing.T) {
 	}
 }
 
-// func Test_biToDecimal(t *testing.T) {}
+// func Test_BiToDecimal(t *testing.T) {}
 
-func Benchmark_biToHex(b *testing.B) {
+func Benchmark_BiToHex(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -97,7 +155,7 @@ func Benchmark_biToHex(b *testing.B) {
 	}
 }
 
-func Test_biToHex(t *testing.T) {
+func Test_BiToHex(t *testing.T) {
 	type args struct {
 		x BigInt
 	}
@@ -126,7 +184,7 @@ func Test_biToHex(t *testing.T) {
 	}
 }
 
-func Benchmark_biFromHex(b *testing.B) {
+func Benchmark_BiFromHex(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -135,7 +193,7 @@ func Benchmark_biFromHex(b *testing.B) {
 	}
 }
 
-func Test_biFromHex(t *testing.T) {
+func Test_BiFromHex(t *testing.T) {
 	type args struct {
 		s string
 	}
@@ -164,9 +222,9 @@ func Test_biFromHex(t *testing.T) {
 	}
 }
 
-// func Test_biFromString(t *testing.T) {}
+// func Test_BiFromString(t *testing.T) {}
 
-func Benchmark_biToBytes(b *testing.B) {
+func Benchmark_BiToBytes(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -175,7 +233,7 @@ func Benchmark_biToBytes(b *testing.B) {
 	}
 }
 
-func Test_biToBytes(t *testing.T) {
+func Test_BiToBytes(t *testing.T) {
 	type args struct {
 		x BigInt
 	}
@@ -204,9 +262,9 @@ func Test_biToBytes(t *testing.T) {
 	}
 }
 
-// func Test_biDump(t *testing.T) {}
+// func Test_BiDump(t *testing.T) {}
 
-func Benchmark_biAdd(b *testing.B) {
+func Benchmark_BiAdd(b *testing.B) {
 	SetMaxDigits(16)
 	x := BiFromHex("deadbeef")
 	y := BiFromHex("beefdead")
@@ -217,7 +275,7 @@ func Benchmark_biAdd(b *testing.B) {
 	}
 }
 
-func Test_biAdd(t *testing.T) {
+func Test_BiAdd(t *testing.T) {
 	type args struct {
 		x BigInt
 		y BigInt
@@ -274,7 +332,7 @@ func Test_biAdd(t *testing.T) {
 	}
 }
 
-func Benchmark_biSubtract(b *testing.B) {
+func Benchmark_BiSubtract(b *testing.B) {
 	SetMaxDigits(16)
 	x := BiFromHex(testString)
 	y := BiFromHex(reverseStr(testString))
@@ -285,7 +343,7 @@ func Benchmark_biSubtract(b *testing.B) {
 	}
 }
 
-func Test_biSubtract(t *testing.T) {
+func Test_BiSubtract(t *testing.T) {
 	type args struct {
 		x BigInt
 		y BigInt
@@ -342,7 +400,7 @@ func Test_biSubtract(t *testing.T) {
 	}
 }
 
-func Benchmark_biHighIndex(b *testing.B) {
+func Benchmark_BiHighIndex(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -351,7 +409,7 @@ func Benchmark_biHighIndex(b *testing.B) {
 	}
 }
 
-func Test_biHighIndex(t *testing.T) {
+func Test_BiHighIndex(t *testing.T) {
 	type args struct {
 		x BigInt
 	}
@@ -380,7 +438,7 @@ func Test_biHighIndex(t *testing.T) {
 	}
 }
 
-func Benchmark_biNumBits(b *testing.B) {
+func Benchmark_BiNumBits(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -389,7 +447,7 @@ func Benchmark_biNumBits(b *testing.B) {
 	}
 }
 
-func Test_biNumBits(t *testing.T) {
+func Test_BiNumBits(t *testing.T) {
 	type args struct {
 		x BigInt
 	}
@@ -418,7 +476,7 @@ func Test_biNumBits(t *testing.T) {
 	}
 }
 
-func Benchmark_biMultiply(b *testing.B) {
+func Benchmark_BiMultiply(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -427,7 +485,7 @@ func Benchmark_biMultiply(b *testing.B) {
 	}
 }
 
-func Test_biMultiply(t *testing.T) {
+func Test_BiMultiply(t *testing.T) {
 	type args struct {
 		x BigInt
 		y BigInt
@@ -464,7 +522,7 @@ func Test_biMultiply(t *testing.T) {
 	}
 }
 
-func Benchmark_biMultiplyDigit(b *testing.B) {
+func Benchmark_BiMultiplyDigit(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -473,7 +531,7 @@ func Benchmark_biMultiplyDigit(b *testing.B) {
 	}
 }
 
-func Test_biMultiplyDigit(t *testing.T) {
+func Test_BiMultiplyDigit(t *testing.T) {
 	type args struct {
 		x BigInt
 		y int
@@ -510,7 +568,7 @@ func Test_biMultiplyDigit(t *testing.T) {
 	}
 }
 
-func Benchmark_biShiftLeft(b *testing.B) {
+func Benchmark_BiShiftLeft(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -519,7 +577,7 @@ func Benchmark_biShiftLeft(b *testing.B) {
 	}
 }
 
-func Test_biShiftLeft(t *testing.T) {
+func Test_BiShiftLeft(t *testing.T) {
 	type args struct {
 		x BigInt
 		n int
@@ -552,7 +610,7 @@ func Test_biShiftLeft(t *testing.T) {
 	}
 }
 
-func Benchmark_biShiftRight(b *testing.B) {
+func Benchmark_BiShiftRight(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -561,7 +619,7 @@ func Benchmark_biShiftRight(b *testing.B) {
 	}
 }
 
-func Test_biShiftRight(t *testing.T) {
+func Test_BiShiftRight(t *testing.T) {
 	type args struct {
 		x BigInt
 		n int
@@ -595,7 +653,7 @@ func Test_biShiftRight(t *testing.T) {
 	}
 }
 
-func Benchmark_biMultiplyByRadixPower(b *testing.B) {
+func Benchmark_BiMultiplyByRadixPower(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -604,7 +662,7 @@ func Benchmark_biMultiplyByRadixPower(b *testing.B) {
 	}
 }
 
-func Test_biMultiplyByRadixPower(t *testing.T) {
+func Test_BiMultiplyByRadixPower(t *testing.T) {
 	type args struct {
 		x BigInt
 		n int
@@ -638,7 +696,7 @@ func Test_biMultiplyByRadixPower(t *testing.T) {
 	}
 }
 
-func Benchmark_biDivideByRadixPower(b *testing.B) {
+func Benchmark_BiDivideByRadixPower(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -647,7 +705,7 @@ func Benchmark_biDivideByRadixPower(b *testing.B) {
 	}
 }
 
-func Test_biDivideByRadixPower(t *testing.T) {
+func Test_BiDivideByRadixPower(t *testing.T) {
 	type args struct {
 		x BigInt
 		n int
@@ -681,7 +739,7 @@ func Test_biDivideByRadixPower(t *testing.T) {
 	}
 }
 
-func Benchmark_biModuloByRadixPower(b *testing.B) {
+func Benchmark_BiModuloByRadixPower(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -690,7 +748,7 @@ func Benchmark_biModuloByRadixPower(b *testing.B) {
 	}
 }
 
-func Test_biModuloByRadixPower(t *testing.T) {
+func Test_BiModuloByRadixPower(t *testing.T) {
 	type args struct {
 		x BigInt
 		n int
@@ -724,7 +782,7 @@ func Test_biModuloByRadixPower(t *testing.T) {
 	}
 }
 
-func Benchmark_biCompare(b *testing.B) {
+func Benchmark_BiCompare(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -733,7 +791,7 @@ func Benchmark_biCompare(b *testing.B) {
 	}
 }
 
-func Test_biCompare(t *testing.T) {
+func Test_BiCompare(t *testing.T) {
 	type args struct {
 		x BigInt
 		y BigInt
@@ -816,7 +874,7 @@ func Test_biCompare(t *testing.T) {
 	}
 }
 
-func Benchmark_biDivideModulo(b *testing.B) {
+func Benchmark_BiDivideModulo(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -825,7 +883,7 @@ func Benchmark_biDivideModulo(b *testing.B) {
 	}
 }
 
-func Test_biDivideModulo(t *testing.T) {
+func Test_BiDivideModulo(t *testing.T) {
 	type args struct {
 		x BigInt
 		y BigInt
@@ -914,7 +972,7 @@ func Test_biDivideModulo(t *testing.T) {
 	}
 }
 
-func Benchmark_biDivide(b *testing.B) {
+func Benchmark_BiDivide(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -923,7 +981,7 @@ func Benchmark_biDivide(b *testing.B) {
 	}
 }
 
-func Test_biDivide(t *testing.T) {
+func Test_BiDivide(t *testing.T) {
 	type args struct {
 		x BigInt
 		y BigInt
@@ -954,7 +1012,7 @@ func Test_biDivide(t *testing.T) {
 	}
 }
 
-func Benchmark_biModulo(b *testing.B) {
+func Benchmark_BiModulo(b *testing.B) {
 	SetMaxDigits(16)
 	b.ResetTimer()
 
@@ -963,7 +1021,7 @@ func Benchmark_biModulo(b *testing.B) {
 	}
 }
 
-func Test_biModulo(t *testing.T) {
+func Test_BiModulo(t *testing.T) {
 	type args struct {
 		x BigInt
 		y BigInt
@@ -997,10 +1055,10 @@ func Test_biModulo(t *testing.T) {
 	}
 }
 
-// func Test_biMultiplyMod(t *testing.T) {}
+// func Test_BiMultiplyMod(t *testing.T) {}
 
-// func Test_biMultiplyMod(t *testing.T) {}
+// func Test_BiMultiplyMod(t *testing.T) {}
 
-// func Test_biPow(t *testing.T) {}
+// func Test_BiPow(t *testing.T) {}
 
-// func Test_biPowMod(t *testing.T) {}
+// func Test_BiPowMod(t *testing.T) {}
