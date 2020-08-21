@@ -183,11 +183,7 @@ func EncryptedString(key KeyPair, s string, pad int, encoding int) string {
 		if encodingtype == 1 {
 			text = BiToBytes(crypt)
 		} else {
-			if key.Radix() == 16 {
-				text = BiToHex(crypt)
-			} else {
-				text = BiToString(crypt, key.Radix())
-			}
+			text = BiToHex(crypt)
 		}
 		result += text
 	}

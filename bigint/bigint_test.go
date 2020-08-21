@@ -117,32 +117,7 @@ func Test_BiCopy(t *testing.T) {
 
 // func Test_BiFromNumber(t *testing.T) {}
 
-// func Benchmark_BiToString(b *testing.B) {}
-
-func Test_BiToString(t *testing.T) {
-	type args struct {
-		x     BigInt
-		radix int
-	}
-	type test struct {
-		name string
-		args args
-		want string
-	}
-	SetMaxDigits(8)
-
-	tests := []test{
-		// TODO: Add test cases.
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := BiToString(tt.args.x, tt.args.radix); got != tt.want {
-				t.Errorf("biToString() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+// func Test_BiToString(t *testing.T) {}
 
 // func Test_BiToDecimal(t *testing.T) {}
 
@@ -464,6 +439,12 @@ func Test_BiNumBits(t *testing.T) {
 				x: testBigInt,
 			},
 			want: 128,
+		},
+		{
+			args: args{
+				x: BiFromHex(testString[0:31]),
+			},
+			want: 124,
 		},
 	}
 
@@ -906,6 +887,23 @@ func Test_BiDivideModulo(t *testing.T) {
 				bigOne,
 				{
 					Digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961, 0, 0, 0, 0, 0, 0, 0, 0},
+					IsNeg:  false,
+				},
+			},
+		},
+		{
+			name: "Big/Small",
+			args: args{
+				x: BiFromHex(testString),
+				y: BiFromHex(reverseStr(testString[0:24])),
+			},
+			want: [2]BigInt{
+				{
+					Digits: []int{46954, 61562, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+					IsNeg:  false,
+				},
+				{
+					Digits: []int{44427, 20148, 16222, 51298, 28899, 1085, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 					IsNeg:  false,
 				},
 			},

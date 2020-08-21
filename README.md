@@ -17,8 +17,8 @@ Go has built-in tools for benchmarking, testing, and visualizing test code cover
 The GitHub Actions workflow uses this same tooling for CodeCov.
 
 ```sh
-go test -bench=. -benchmem
-go test -covermode=count -coverprofile=coverage.out && go tool cover -html=coverage.out
+go test ./... -bench=. -benchmem
+go test ./... -covermode=count -coverprofile=coverage.out && go tool cover -html=coverage.out
 ```
 
 ## A note about pointers

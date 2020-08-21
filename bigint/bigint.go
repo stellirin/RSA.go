@@ -54,21 +54,7 @@ func BiCopy(bi BigInt) BigInt {
 
 // func biFromNumber(i int) BigInt {}
 
-func BiToString(x BigInt, radix int) string {
-	b := NewBigInt(false)
-	b.Digits[0] = radix
-	qr := BiDivideModulo(x, b)
-	result := hexatrigesimalToChar[qr[1].Digits[0]]
-	for BiCompare(qr[0], bigZero) == 1 {
-		qr = BiDivideModulo(qr[0], b)
-		result += hexatrigesimalToChar[qr[1].Digits[0]]
-	}
-	var isNeg string
-	if x.IsNeg {
-		isNeg = "-"
-	}
-	return isNeg + reverseStr(result)
-}
+// func BiToString(x BigInt, radix int) string {}
 
 // func biToDecimal(x BigInt) string {}
 
