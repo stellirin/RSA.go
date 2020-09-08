@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	. "github.com/stellirin/RSA.go/barrett"
-	. "github.com/stellirin/RSA.go/bigint"
+	"github.com/stellirin/RSA.go/barrett"
+	"github.com/stellirin/RSA.go/bigint"
 )
 
 var encryptionExponent = "10001"
@@ -23,10 +23,9 @@ func Test_KeyPair_E(t *testing.T) {
 	type test struct {
 		name   string
 		fields fields
-		want   BigInt
+		want   bigint.BigInt
 	}
 
-	SetMaxDigits(256)
 	tests := []test{
 		{
 			fields: fields{
@@ -35,7 +34,7 @@ func Test_KeyPair_E(t *testing.T) {
 				modulus:            modulus,
 				keylen:             keylen,
 			},
-			want: BiFromHex(encryptionExponent),
+			want: bigint.BiFromHex(encryptionExponent),
 		},
 	}
 
@@ -64,10 +63,9 @@ func Test_KeyPair_D(t *testing.T) {
 	type test struct {
 		name   string
 		fields fields
-		want   BigInt
+		want   bigint.BigInt
 	}
 
-	SetMaxDigits(256)
 	tests := []test{
 		{
 			fields: fields{
@@ -76,7 +74,7 @@ func Test_KeyPair_D(t *testing.T) {
 				modulus:            modulus,
 				keylen:             keylen,
 			},
-			want: BiFromHex(decryptionExponent),
+			want: bigint.BiFromHex(decryptionExponent),
 		},
 	}
 
@@ -105,10 +103,9 @@ func Test_KeyPair_M(t *testing.T) {
 	type test struct {
 		name   string
 		fields fields
-		want   BigInt
+		want   bigint.BigInt
 	}
 
-	SetMaxDigits(256)
 	tests := []test{
 		{
 			fields: fields{
@@ -117,7 +114,7 @@ func Test_KeyPair_M(t *testing.T) {
 				modulus:            modulus,
 				keylen:             keylen,
 			},
-			want: BiFromHex(modulus),
+			want: bigint.BiFromHex(modulus),
 		},
 	}
 
@@ -149,7 +146,6 @@ func Test_KeyPair_ChunkSize(t *testing.T) {
 		want   int
 	}
 
-	SetMaxDigits(256)
 	tests := []test{
 		{
 			fields: fields{
@@ -190,7 +186,6 @@ func Test_KeyPair_Radix(t *testing.T) {
 		want   int
 	}
 
-	SetMaxDigits(256)
 	tests := []test{
 		{
 			fields: fields{
@@ -228,10 +223,9 @@ func Test_KeyPair_Barrett(t *testing.T) {
 	type test struct {
 		name   string
 		fields fields
-		want   BarrettMu
+		want   barrett.BarrettMu
 	}
 
-	SetMaxDigits(256)
 	tests := []test{
 		{
 			fields: fields{
@@ -240,7 +234,7 @@ func Test_KeyPair_Barrett(t *testing.T) {
 				modulus:            modulus,
 				keylen:             keylen,
 			},
-			want: NewBarretMu(BiFromHex(modulus)),
+			want: barrett.NewBarretMu(bigint.BiFromHex(modulus)),
 		},
 	}
 
@@ -272,7 +266,6 @@ func Test_NewKeyPair(t *testing.T) {
 		want KeyPair
 	}
 
-	SetMaxDigits(256)
 	tests := []test{
 		{
 			args: args{
@@ -312,7 +305,6 @@ func Test_EncryptedString(t *testing.T) {
 		want string
 	}
 
-	SetMaxDigits(256)
 	key := KeyPair{
 		encryptionExponent: encryptionExponent,
 		decryptionExponent: decryptionExponent,

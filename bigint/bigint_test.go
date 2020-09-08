@@ -50,8 +50,25 @@ func Test_NewBigInt(t *testing.T) {
 				flag: false,
 			},
 			want: BigInt{
-				Digits: []int{0, 0, 0, 0, 0, 0, 0, 0},
-				IsNeg:  false,
+				Digits: []int{
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				},
+				IsNeg: false,
 			},
 		},
 		{
@@ -65,11 +82,10 @@ func Test_NewBigInt(t *testing.T) {
 		},
 	}
 
-	SetMaxDigits(8)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewBigInt(tt.args.flag); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewBigInt() = %v, want %v", got, tt.want)
+			if got := New(tt.args.flag); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("New() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -78,7 +94,6 @@ func Test_NewBigInt(t *testing.T) {
 // func Test_BiFromDecimal(t *testing.T) {}
 
 func Benchmark_BiCopy(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -95,7 +110,6 @@ func Test_BiCopy(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -122,7 +136,6 @@ func Test_BiCopy(t *testing.T) {
 // func Test_BiToDecimal(t *testing.T) {}
 
 func Benchmark_BiToHex(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -139,7 +152,6 @@ func Test_BiToHex(t *testing.T) {
 		args args
 		want string
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -160,7 +172,6 @@ func Test_BiToHex(t *testing.T) {
 }
 
 func Benchmark_BiFromHex(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -177,7 +188,6 @@ func Test_BiFromHex(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -200,7 +210,6 @@ func Test_BiFromHex(t *testing.T) {
 // func Test_BiFromString(t *testing.T) {}
 
 func Benchmark_BiToBytes(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -217,7 +226,6 @@ func Test_BiToBytes(t *testing.T) {
 		args args
 		want string
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -240,7 +248,6 @@ func Test_BiToBytes(t *testing.T) {
 // func Test_BiDump(t *testing.T) {}
 
 func Benchmark_BiAdd(b *testing.B) {
-	SetMaxDigits(16)
 	x := BiFromHex("deadbeef")
 	y := BiFromHex("beefdead")
 	b.ResetTimer()
@@ -260,7 +267,6 @@ func Test_BiAdd(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(16)
 
 	tests := []test{
 		{
@@ -308,7 +314,6 @@ func Test_BiAdd(t *testing.T) {
 }
 
 func Benchmark_BiSubtract(b *testing.B) {
-	SetMaxDigits(16)
 	x := BiFromHex(testString)
 	y := BiFromHex(reverseStr(testString))
 	b.ResetTimer()
@@ -328,7 +333,6 @@ func Test_BiSubtract(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(16)
 
 	tests := []test{
 		{
@@ -376,7 +380,6 @@ func Test_BiSubtract(t *testing.T) {
 }
 
 func Benchmark_BiHighIndex(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -393,7 +396,6 @@ func Test_BiHighIndex(t *testing.T) {
 		args args
 		want int
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -414,7 +416,6 @@ func Test_BiHighIndex(t *testing.T) {
 }
 
 func Benchmark_BiNumBits(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -431,7 +432,6 @@ func Test_BiNumBits(t *testing.T) {
 		args args
 		want int
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -458,7 +458,6 @@ func Test_BiNumBits(t *testing.T) {
 }
 
 func Benchmark_BiMultiply(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -476,7 +475,6 @@ func Test_BiMultiply(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(16)
 
 	tests := []test{
 		{
@@ -504,7 +502,6 @@ func Test_BiMultiply(t *testing.T) {
 }
 
 func Benchmark_BiMultiplyDigit(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -522,7 +519,6 @@ func Test_BiMultiplyDigit(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(16)
 
 	tests := []test{
 		{
@@ -550,7 +546,6 @@ func Test_BiMultiplyDigit(t *testing.T) {
 }
 
 func Benchmark_BiShiftLeft(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -568,7 +563,6 @@ func Test_BiShiftLeft(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -592,7 +586,6 @@ func Test_BiShiftLeft(t *testing.T) {
 }
 
 func Benchmark_BiShiftRight(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -610,7 +603,6 @@ func Test_BiShiftRight(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -635,7 +627,6 @@ func Test_BiShiftRight(t *testing.T) {
 }
 
 func Benchmark_BiMultiplyByRadixPower(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -653,7 +644,6 @@ func Test_BiMultiplyByRadixPower(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -678,7 +668,6 @@ func Test_BiMultiplyByRadixPower(t *testing.T) {
 }
 
 func Benchmark_BiDivideByRadixPower(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -696,7 +685,6 @@ func Test_BiDivideByRadixPower(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -721,7 +709,6 @@ func Test_BiDivideByRadixPower(t *testing.T) {
 }
 
 func Benchmark_BiModuloByRadixPower(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -739,7 +726,6 @@ func Test_BiModuloByRadixPower(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -764,7 +750,6 @@ func Test_BiModuloByRadixPower(t *testing.T) {
 }
 
 func Benchmark_BiCompare(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -782,7 +767,6 @@ func Test_BiCompare(t *testing.T) {
 		args args
 		want int
 	}
-	SetMaxDigits(8)
 
 	w, x, y, z := "-bead", "-face", "dead", "beef"
 	biw, bix, biy, biz := BiFromHex(w), BiFromHex(x), BiFromHex(y), BiFromHex(z)
@@ -856,7 +840,6 @@ func Test_BiCompare(t *testing.T) {
 }
 
 func Benchmark_BiDivideModulo(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -874,7 +857,6 @@ func Test_BiDivideModulo(t *testing.T) {
 		args args
 		want [2]BigInt
 	}
-	SetMaxDigits(16)
 
 	tests := []test{
 		{
@@ -950,7 +932,7 @@ func Test_BiDivideModulo(t *testing.T) {
 			},
 			want: [2]BigInt{
 				{
-					Digits: []int{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+					Digits: bigOne.Digits,
 					IsNeg:  true,
 				},
 				{
@@ -971,7 +953,6 @@ func Test_BiDivideModulo(t *testing.T) {
 }
 
 func Benchmark_BiDivide(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -989,7 +970,6 @@ func Test_BiDivide(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(8)
 
 	tests := []test{
 		{
@@ -1011,7 +991,6 @@ func Test_BiDivide(t *testing.T) {
 }
 
 func Benchmark_BiModulo(b *testing.B) {
-	SetMaxDigits(16)
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
@@ -1029,7 +1008,12 @@ func Test_BiModulo(t *testing.T) {
 		args args
 		want BigInt
 	}
-	SetMaxDigits(8)
+
+	value := []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961}
+	digits := bigZero.Digits
+	for i, v := range value {
+		digits[i] = v
+	}
 
 	tests := []test{
 		{
@@ -1038,7 +1022,7 @@ func Test_BiModulo(t *testing.T) {
 				y: BiFromHex(reverseStr(testString)),
 			},
 			want: BigInt{
-				Digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961},
+				Digits: digits,
 				IsNeg:  false,
 			},
 		},

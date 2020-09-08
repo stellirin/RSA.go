@@ -15,14 +15,14 @@ func SetMaxDigits(value int) {
 	if maxDigits != value {
 		maxDigits = value
 		zeroArray = make([]int, value, value)
-		bigZero = NewBigInt(false)
-		bigOne = NewBigInt(false)
+		bigZero = New(false)
+		bigOne = New(false)
 		bigOne.Digits[0] = 1
 	}
 }
 
-// NewBigInt initializes a new BigInt.
-func NewBigInt(flag bool) BigInt {
+// New initializes a new BigInt.
+func New(flag bool) BigInt {
 	bi := BigInt{}
 	if flag {
 		bi.Digits = []int{}
@@ -46,7 +46,7 @@ var maxDigitVal = BiRadix - 1
 // func biFromDecimal(s string) BigInt {}
 
 func BiCopy(bi BigInt) BigInt {
-	result := NewBigInt(true)
+	result := New(true)
 	result.Digits = append(result.Digits, bi.Digits...)
 	result.IsNeg = bi.IsNeg
 	return result
@@ -67,7 +67,7 @@ func BiToHex(x BigInt) string {
 }
 
 func BiFromHex(s string) BigInt {
-	result := NewBigInt(false)
+	result := New(false)
 
 	// TODO: understand why we don't need to account for "-"
 	if s[0] == "-"[0] {
@@ -102,7 +102,7 @@ func BiAdd(x BigInt, y BigInt) BigInt {
 		return result
 	}
 
-	result := NewBigInt(false)
+	result := New(false)
 
 	c, n := 0, 0
 	for i := range x.Digits {
@@ -131,7 +131,7 @@ func BiSubtract(x BigInt, y BigInt) BigInt {
 		return result
 	}
 
-	result := NewBigInt(false)
+	result := New(false)
 
 	c, n := 0, 0
 	for i := range x.Digits {
@@ -199,7 +199,7 @@ func BiNumBits(x BigInt) int {
 func BiMultiply(x BigInt, y BigInt) BigInt {
 	n := BiHighIndex(x)
 	t := BiHighIndex(y)
-	result := NewBigInt(false)
+	result := New(false)
 
 	for i := 0; i <= t; i++ {
 		c, k, uv := 0, i, 0
@@ -217,7 +217,7 @@ func BiMultiply(x BigInt, y BigInt) BigInt {
 func BiMultiplyDigit(x BigInt, y int) BigInt {
 	var c, uv int
 	n := BiHighIndex(x)
-	result := NewBigInt(false)
+	result := New(false)
 	for j := 0; j <= n; j++ {
 		uv = result.Digits[j] + x.Digits[j]*y + c
 		result.Digits[j] = uv & maxDigitVal
@@ -229,7 +229,7 @@ func BiMultiplyDigit(x BigInt, y int) BigInt {
 
 func BiShiftLeft(x BigInt, n int) BigInt {
 	digitCount := n / bitsPerDigit
-	result := NewBigInt(false)
+	result := New(false)
 	arrayCopy(x.Digits, 0, result.Digits, digitCount, len(result.Digits)-digitCount)
 	bits := n % bitsPerDigit
 	rightBits := bitsPerDigit - bits
@@ -243,7 +243,7 @@ func BiShiftLeft(x BigInt, n int) BigInt {
 
 func BiShiftRight(x BigInt, n int) BigInt {
 	digitCount := n / bitsPerDigit
-	result := NewBigInt(false)
+	result := New(false)
 	arrayCopy(x.Digits, digitCount, result.Digits, 0, len(x.Digits)-digitCount)
 	bits := n % bitsPerDigit
 	leftBits := bitsPerDigit - bits
@@ -255,19 +255,19 @@ func BiShiftRight(x BigInt, n int) BigInt {
 }
 
 func BiMultiplyByRadixPower(x BigInt, n int) BigInt {
-	result := NewBigInt(false)
+	result := New(false)
 	arrayCopy(x.Digits, 0, result.Digits, n, len(result.Digits)-n)
 	return result
 }
 
 func BiDivideByRadixPower(x BigInt, n int) BigInt {
-	result := NewBigInt(false)
+	result := New(false)
 	arrayCopy(x.Digits, n, result.Digits, 0, len(result.Digits)-n)
 	return result
 }
 
 func BiModuloByRadixPower(x BigInt, n int) BigInt {
-	result := NewBigInt(false)
+	result := New(false)
 	arrayCopy(x.Digits, 0, result.Digits, 0, n)
 	return result
 }
@@ -324,13 +324,13 @@ func BiDivideModulo(x BigInt, y BigInt) [2]BigInt {
 			x.IsNeg = true
 			y.IsNeg = origYIsNeg
 		} else {
-			q = NewBigInt(false)
+			q = New(false)
 			r = BiCopy(x)
 		}
 		return [2]BigInt{q, r}
 	}
 
-	q = NewBigInt(false)
+	q = New(false)
 	r = x
 
 	// Normalize Y.

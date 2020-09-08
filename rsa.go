@@ -4,7 +4,7 @@ import (
 	"math/rand"
 
 	. "github.com/stellirin/RSA.go/barrett"
-	. "github.com/stellirin/RSA.go/bigint"
+	"github.com/stellirin/RSA.go/bigint"
 )
 
 var RSAAPP = map[string]int{
@@ -26,29 +26,29 @@ type KeyPair struct {
 }
 
 // E returns the encryptionExponent in bigInt format.
-func (key *KeyPair) E() BigInt {
-	return BiFromHex(key.encryptionExponent)
+func (key *KeyPair) E() bigint.BigInt {
+	return bigint.BiFromHex(key.encryptionExponent)
 }
 
 // D returns the decryptionExponent in bigInt format.
-func (key *KeyPair) D() BigInt {
-	return BiFromHex(key.decryptionExponent)
+func (key *KeyPair) D() bigint.BigInt {
+	return bigint.BiFromHex(key.decryptionExponent)
 }
 
 // M returns the modulis in bigInt format.
-func (key *KeyPair) M() BigInt {
-	return BiFromHex(key.modulus)
+func (key *KeyPair) M() bigint.BigInt {
+	return bigint.BiFromHex(key.modulus)
 }
 
 // ChunkSize returns the current chunk size.
 func (key *KeyPair) ChunkSize() int {
 	// i := key.keylen / 8
-	return 2 * BiHighIndex(key.M())
+	return 2 * bigint.BiHighIndex(key.M())
 }
 
 // Radix returns biRadixBits.
 func (key *KeyPair) Radix() int {
-	return BiRadixBits
+	return bigint.BiRadixBits
 }
 
 // Barrett returns a new barretMu.
@@ -166,7 +166,7 @@ func EncryptedString(key KeyPair, s string, pad int, encoding int) string {
 
 	for i = 0; i < al; i += key.ChunkSize() {
 		// Get a block.
-		block := NewBigInt(false)
+		block := bigint.New(false)
 
 		j = 0
 
@@ -181,9 +181,9 @@ func EncryptedString(key KeyPair, s string, pad int, encoding int) string {
 		// Encrypt it, convert it to text, and append it to the result.
 		crypt := barrett.PowMod(block, key.E())
 		if encodingtype == 1 {
-			text = BiToBytes(crypt)
+			text = bigint.BiToBytes(crypt)
 		} else {
-			text = BiToHex(crypt)
+			text = bigint.BiToHex(crypt)
 		}
 		result += text
 	}
