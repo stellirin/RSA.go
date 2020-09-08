@@ -12,9 +12,11 @@ var rInt int
 
 var testRunes = []rune{222, 173, 190, 239, 202, 254, 240, 13, 186, 190, 192, 222, 250, 206, 190, 173}
 var testString = "dead" + "beef" + "cafe" + "f00d" + "babe" + "c0de" + "face" + "bead"
-var testBigInt = BigInt{
-	Digits: []int{48813, 64206, 49374, 47806, 61453, 51966, 48879, 57005}, // bead, face, c0de, babe, f00d, cafe, beef, dead
-	IsNeg:  false,
+var testBigInt BigInt
+
+func init() {
+	testBigInt = New(false)
+	copy(testBigInt.Digits, []int{48813, 64206, 49374, 47806, 61453, 51966, 48879, 57005}) // bead, face, c0de, babe, f00d, cafe, beef, dead
 }
 
 func Test_SetMaxDigits(t *testing.T) {
@@ -268,6 +270,13 @@ func Test_BiAdd(t *testing.T) {
 		want BigInt
 	}
 
+	digits1 := make([]int, 256)
+	digits2 := make([]int, 256)
+	digits3 := make([]int, 256)
+	copy(digits1, []int{32090, 62877, 33213, 30077, 57371, 38397, 32223, 48475, 1})
+	copy(digits2, []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961})
+	copy(digits3, []int{46554, 64983, 57177, 40991, 55127, 55833, 55647, 46551, 1})
+
 	tests := []test{
 		{
 			name: "Pos+Pos",
@@ -276,7 +285,7 @@ func Test_BiAdd(t *testing.T) {
 				y: BiFromHex(testString),
 			},
 			want: BigInt{
-				Digits: []int{32090, 62877, 33213, 30077, 57371, 38397, 32223, 48475, 1, 0, 0, 0, 0, 0, 0, 0},
+				Digits: digits1,
 				IsNeg:  false,
 			},
 		},
@@ -287,7 +296,7 @@ func Test_BiAdd(t *testing.T) {
 				y: BiFromHex("-" + reverseStr(testString)),
 			},
 			want: BigInt{
-				Digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961, 0, 0, 0, 0, 0, 0, 0, 0},
+				Digits: digits2,
 				IsNeg:  false,
 			},
 		},
@@ -298,7 +307,7 @@ func Test_BiAdd(t *testing.T) {
 				y: BiFromHex("-" + reverseStr(testString)),
 			},
 			want: BigInt{
-				Digits: []int{46554, 64983, 57177, 40991, 55127, 55833, 55647, 46551, 1, 0, 0, 0, 0, 0, 0, 0},
+				Digits: digits3,
 				IsNeg:  true,
 			},
 		},
@@ -334,6 +343,11 @@ func Test_BiSubtract(t *testing.T) {
 		want BigInt
 	}
 
+	digits1 := make([]int, 256)
+	digits2 := make([]int, 256)
+	copy(digits1, []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961})
+	copy(digits2, []int{39322, 63930, 45195, 35534, 56249, 47115, 43935, 47513, 1})
+
 	tests := []test{
 		{
 			name: "Pos-Pos",
@@ -342,7 +356,7 @@ func Test_BiSubtract(t *testing.T) {
 				y: BiFromHex(reverseStr(testString)),
 			},
 			want: BigInt{
-				Digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961, 0, 0, 0, 0, 0, 0, 0, 0},
+				Digits: digits1,
 				IsNeg:  false,
 			},
 		},
@@ -353,7 +367,7 @@ func Test_BiSubtract(t *testing.T) {
 				y: BiFromHex("-" + reverseStr(testString)),
 			},
 			want: BigInt{
-				Digits: []int{39322, 63930, 45195, 35534, 56249, 47115, 43935, 47513, 1, 0, 0, 0, 0, 0, 0, 0},
+				Digits: digits2,
 				IsNeg:  false,
 			},
 		},
@@ -363,10 +377,7 @@ func Test_BiSubtract(t *testing.T) {
 				x: BiFromHex("-" + reverseStr(testString)),
 				y: BiFromHex("-" + reverseStr(testString)),
 			},
-			want: BigInt{
-				Digits: []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				IsNeg:  false,
-			},
+			want: bigZero,
 		},
 	}
 
@@ -476,6 +487,9 @@ func Test_BiMultiply(t *testing.T) {
 		want BigInt
 	}
 
+	digits := make([]int, 256)
+	copy(digits, []int{16617, 20593, 42861, 32538, 45046, 25231, 13697, 47718, 1165, 9698, 10208, 22465, 22231, 33427, 52499, 49585})
+
 	tests := []test{
 		{
 			args: args{
@@ -483,11 +497,8 @@ func Test_BiMultiply(t *testing.T) {
 				y: testBigInt,
 			},
 			want: BigInt{
-				Digits: []int{
-					16617, 20593, 42861, 32538, 45046, 25231, 13697, 47718,
-					1165, 9698, 10208, 22465, 22231, 33427, 52499, 49585,
-				},
-				IsNeg: false,
+				Digits: digits,
+				IsNeg:  false,
 			},
 		},
 	}
@@ -520,6 +531,9 @@ func Test_BiMultiplyDigit(t *testing.T) {
 		want BigInt
 	}
 
+	digits := make([]int, 256)
+	copy(digits, []int{60112, 44267, 3567, 44012, 219, 45039, 61180, 60123, 13})
+
 	tests := []test{
 		{
 			args: args{
@@ -527,11 +541,8 @@ func Test_BiMultiplyDigit(t *testing.T) {
 				y: 16,
 			},
 			want: BigInt{
-				Digits: []int{
-					60112, 44267, 3567, 44012, 219, 45039, 61180, 60123,
-					13, 0, 0, 0, 0, 0, 0, 0,
-				},
-				IsNeg: false,
+				Digits: digits,
+				IsNeg:  false,
 			},
 		},
 	}
@@ -564,6 +575,9 @@ func Test_BiShiftLeft(t *testing.T) {
 		want BigInt
 	}
 
+	digits := make([]int, 256)
+	copy(digits, []int{0, 48813, 64206, 49374, 47806, 61453, 51966, 48879, 57005})
+
 	tests := []test{
 		{
 			args: args{
@@ -571,7 +585,7 @@ func Test_BiShiftLeft(t *testing.T) {
 				n: 16,
 			},
 			want: BigInt{
-				Digits: []int{0, 48813, 64206, 49374, 47806, 61453, 51966, 48879},
+				Digits: digits,
 			},
 		},
 	}
@@ -604,6 +618,9 @@ func Test_BiShiftRight(t *testing.T) {
 		want BigInt
 	}
 
+	digits := make([]int, 256)
+	copy(digits, []int{64206, 49374, 47806, 61453, 51966, 48879, 57005})
+
 	tests := []test{
 		{
 			args: args{
@@ -611,7 +628,7 @@ func Test_BiShiftRight(t *testing.T) {
 				n: 16,
 			},
 			want: BigInt{
-				Digits: []int{64206, 49374, 47806, 61453, 51966, 48879, 57005, 0},
+				Digits: digits,
 				IsNeg:  false,
 			},
 		},
@@ -645,6 +662,9 @@ func Test_BiMultiplyByRadixPower(t *testing.T) {
 		want BigInt
 	}
 
+	digits := make([]int, 256)
+	copy(digits, []int{0, 0, 0, 48813, 64206, 49374, 47806, 61453, 51966, 48879, 57005})
+
 	tests := []test{
 		{
 			args: args{
@@ -652,7 +672,7 @@ func Test_BiMultiplyByRadixPower(t *testing.T) {
 				n: 3,
 			},
 			want: BigInt{
-				Digits: []int{0, 0, 0, 48813, 64206, 49374, 47806, 61453},
+				Digits: digits,
 				IsNeg:  false,
 			},
 		},
@@ -686,6 +706,9 @@ func Test_BiDivideByRadixPower(t *testing.T) {
 		want BigInt
 	}
 
+	digits := make([]int, 256)
+	copy(digits, []int{47806, 61453, 51966, 48879, 57005})
+
 	tests := []test{
 		{
 			args: args{
@@ -693,7 +716,7 @@ func Test_BiDivideByRadixPower(t *testing.T) {
 				n: 3,
 			},
 			want: BigInt{
-				Digits: []int{47806, 61453, 51966, 48879, 57005, 0, 0, 0},
+				Digits: digits,
 				IsNeg:  false,
 			},
 		},
@@ -727,6 +750,9 @@ func Test_BiModuloByRadixPower(t *testing.T) {
 		want BigInt
 	}
 
+	digits := make([]int, 256)
+	copy(digits, []int{48813, 64206, 49374})
+
 	tests := []test{
 		{
 			args: args{
@@ -734,7 +760,7 @@ func Test_BiModuloByRadixPower(t *testing.T) {
 				n: 3,
 			},
 			want: BigInt{
-				Digits: []int{48813, 64206, 49374, 0, 0, 0, 0, 0},
+				Digits: digits,
 				IsNeg:  false,
 			},
 		},
@@ -858,6 +884,19 @@ func Test_BiDivideModulo(t *testing.T) {
 		want [2]BigInt
 	}
 
+	digits1 := make([]int, 256)
+	digits2 := make([]int, 256)
+	digits3 := make([]int, 256)
+	digits4 := make([]int, 256)
+	digits5 := make([]int, 256)
+	digits6 := make([]int, 256)
+	copy(digits1, []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961})
+	copy(digits2, []int{46954, 61562})
+	copy(digits3, []int{44427, 20148, 16222, 51298, 28899, 1085})
+	copy(digits4, []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961})
+	copy(digits5, []int{49374, 47806, 61453, 51966, 48879, 57005})
+	copy(digits6, []int{6671, 17453, 65439, 1296, 11452, 3679, 60591, 56043})
+
 	tests := []test{
 		{
 			name: "Pos/Pos",
@@ -868,7 +907,7 @@ func Test_BiDivideModulo(t *testing.T) {
 			want: [2]BigInt{
 				bigOne,
 				{
-					Digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961, 0, 0, 0, 0, 0, 0, 0, 0},
+					Digits: digits1,
 					IsNeg:  false,
 				},
 			},
@@ -881,11 +920,11 @@ func Test_BiDivideModulo(t *testing.T) {
 			},
 			want: [2]BigInt{
 				{
-					Digits: []int{46954, 61562, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+					Digits: digits2,
 					IsNeg:  false,
 				},
 				{
-					Digits: []int{44427, 20148, 16222, 51298, 28899, 1085, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+					Digits: digits3,
 					IsNeg:  false,
 				},
 			},
@@ -897,12 +936,9 @@ func Test_BiDivideModulo(t *testing.T) {
 				y: BiFromHex("-" + reverseStr(testString)),
 			},
 			want: [2]BigInt{
+				bigOne,
 				{
-					Digits: []int{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-					IsNeg:  false,
-				},
-				{
-					Digits: []int{58304, 64482, 53553, 60078, 1121, 56818, 53823, 961, 0, 0, 0, 0, 0, 0, 0, 0},
+					Digits: digits4,
 					IsNeg:  true,
 				},
 			},
@@ -914,12 +950,9 @@ func Test_BiDivideModulo(t *testing.T) {
 				y: BiFromHex(reverseStr(testString)),
 			},
 			want: [2]BigInt{
+				bigZero,
 				{
-					Digits: []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-					IsNeg:  false,
-				},
-				{
-					Digits: []int{49374, 47806, 61453, 51966, 48879, 57005, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+					Digits: digits5,
 					IsNeg:  false,
 				},
 			},
@@ -936,7 +969,7 @@ func Test_BiDivideModulo(t *testing.T) {
 					IsNeg:  true,
 				},
 				{
-					Digits: []int{6671, 17453, 65439, 1296, 11452, 3679, 60591, 56043, 0, 0, 0, 0, 0, 0, 0, 0},
+					Digits: digits6,
 					IsNeg:  false,
 				},
 			},
