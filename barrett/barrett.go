@@ -57,7 +57,8 @@ func (b *BarrettMu) PowMod(x bigint.BigInt, y bigint.BigInt) bigint.BigInt {
 	return result
 }
 
-func NewBarretMu(m bigint.BigInt) BarrettMu {
+// New initializes a new BarretMu.
+func New(m bigint.BigInt) BarrettMu {
 	modulus := bigint.BiCopy(m)
 	k := bigint.BiHighIndex(modulus) + 1
 	b2k := bigint.New(false)

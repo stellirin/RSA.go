@@ -124,7 +124,7 @@ func Test_BarrettMu_PowMod(t *testing.T) {
 	}
 }
 
-func Test_NewBarretMu(t *testing.T) {
+func Test_New(t *testing.T) {
 	type args struct {
 		m bigint.BigInt
 	}
@@ -150,7 +150,7 @@ func Test_NewBarretMu(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewBarretMu(tt.args.m); !reflect.DeepEqual(got, tt.want) {
+			if got := New(tt.args.m); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewBarretMu() = %v, want %v", got, tt.want)
 			}
 		})

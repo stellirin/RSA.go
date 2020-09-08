@@ -3,10 +3,11 @@ package rsa
 import (
 	"math/rand"
 
-	. "github.com/stellirin/RSA.go/barrett"
+	"github.com/stellirin/RSA.go/barrett"
 	"github.com/stellirin/RSA.go/bigint"
 )
 
+// RSAAPP is an rsa app.
 var RSAAPP = map[string]int{
 	"NoPadding":       1,
 	"PKCS1Padding":    2,
@@ -52,12 +53,12 @@ func (key *KeyPair) Radix() int {
 }
 
 // Barrett returns a new barretMu.
-func (key *KeyPair) Barrett() BarrettMu {
-	return NewBarretMu(key.M())
+func (key *KeyPair) Barrett() barrett.BarrettMu {
+	return barrett.New(key.M())
 }
 
-// NewKeyPair initializes a new RSAKeyPair.
-func NewKeyPair(encryptionExponent string, decryptionExponent string, modulus string, keylen int) KeyPair {
+// New initializes a new RSA KeyPair.
+func New(encryptionExponent string, decryptionExponent string, modulus string, keylen int) KeyPair {
 	var key KeyPair
 	key = KeyPair{
 		encryptionExponent: encryptionExponent,

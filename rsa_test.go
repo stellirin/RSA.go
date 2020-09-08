@@ -234,7 +234,7 @@ func Test_KeyPair_Barrett(t *testing.T) {
 				modulus:            modulus,
 				keylen:             keylen,
 			},
-			want: barrett.NewBarretMu(bigint.BiFromHex(modulus)),
+			want: barrett.New(bigint.BiFromHex(modulus)),
 		},
 	}
 
@@ -253,7 +253,7 @@ func Test_KeyPair_Barrett(t *testing.T) {
 	}
 }
 
-func Test_NewKeyPair(t *testing.T) {
+func Test_New(t *testing.T) {
 	type args struct {
 		encryptionExponent string
 		decryptionExponent string
@@ -285,7 +285,7 @@ func Test_NewKeyPair(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewKeyPair(tt.args.encryptionExponent, tt.args.decryptionExponent, tt.args.modulus, tt.args.keylen); !reflect.DeepEqual(got, tt.want) {
+			if got := New(tt.args.encryptionExponent, tt.args.decryptionExponent, tt.args.modulus, tt.args.keylen); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewKeyPair() = %v, want %v", got, tt.want)
 			}
 		})
